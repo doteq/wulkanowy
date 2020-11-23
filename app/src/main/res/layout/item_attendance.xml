@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/attendanceItemContainer"
@@ -11,14 +11,21 @@
     android:paddingEnd="12dp"
     android:paddingRight="12dp"
     android:paddingBottom="7dp"
-    tools:context=".ui.modules.attendance.AttendanceItem">
+    tools:context=".ui.modules.attendance.AttendanceAdapter">
 
     <LinearLayout
         android:id="@+id/attendanceItemNumberContainer"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="40dp"
+        android:minHeight="40dp"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/attendanceItemDetailsContainer"
+        app:layout_constraintEnd_toStartOf="@+id/attendanceItemDetailsContainer"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/attendanceItemDetailsContainer">
 
         <TextView
             android:id="@+id/attendanceItemNumber"
@@ -29,8 +36,8 @@
             android:maxLength="2"
             android:textSize="32sp"
             android:visibility="gone"
-            tools:visibility="visible"
-            tools:text="5" />
+            tools:text="5"
+            tools:visibility="visible" />
 
         <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/attendanceItemExcuseCheckbox"
@@ -48,44 +55,52 @@
             app:tint="?attr/colorOnSurface" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/attendanceItemSubject"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/attendanceItemDetailsContainer"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginEnd="40dp"
-        android:layout_marginRight="40dp"
-        android:layout_toStartOf="@id/attendanceItemAlert"
-        android:layout_toLeftOf="@id/attendanceItemAlert"
-        android:layout_toEndOf="@+id/attendanceItemNumberContainer"
-        android:layout_toRightOf="@+id/attendanceItemNumberContainer"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textSize="17sp"
-        tools:text="Matematyka" />
+        android:layout_marginEnd="10dp"
+        app:layout_constraintEnd_toStartOf="@+id/attendanceItemAlert"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/attendanceItemNumberContainer"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/attendanceItemDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@id/attendanceItemSubject"
-        android:layout_alignLeft="@id/attendanceItemSubject"
-        android:layout_alignBottom="@+id/attendanceItemNumberContainer"
-        android:maxLines="1"
-        android:textColor="?android:textColorSecondary"
-        android:textSize="12sp"
-        tools:text="Present" />
+        <TextView
+            android:id="@+id/attendanceItemSubject"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="17sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Matematyka" />
+
+        <TextView
+            android:id="@+id/attendanceItemDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:textColor="?android:textColorSecondary"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@id/attendanceItemDetailsContainer"
+            app:layout_constraintStart_toStartOf="@id/attendanceItemDetailsContainer"
+            app:layout_constraintTop_toBottomOf="@id/attendanceItemSubject"
+            tools:text="Present" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
         android:id="@+id/attendanceItemAlert"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/attendanceItemDetailsContainer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/attendanceItemDetailsContainer"
+        app:layout_constraintTop_toTopOf="@+id/attendanceItemDetailsContainer"
         app:srcCompat="@drawable/ic_all_mark"
         app:tint="?colorPrimary"
         tools:ignore="contentDescription" />
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

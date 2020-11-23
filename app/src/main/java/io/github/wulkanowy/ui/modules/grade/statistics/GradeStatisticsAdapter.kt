@@ -2,7 +2,6 @@ package io.github.wulkanowy.ui.modules.grade.statistics
 
 import android.graphics.Color
 import android.view.LayoutInflater
-import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
@@ -18,12 +17,13 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
 import io.github.wulkanowy.R
+import io.github.wulkanowy.data.db.entities.GradePartialStatistics
 import io.github.wulkanowy.data.db.entities.GradePointsStatistics
-import io.github.wulkanowy.data.db.entities.GradeStatistics
+import io.github.wulkanowy.data.db.entities.GradeSemesterStatistics
 import io.github.wulkanowy.data.pojos.GradeStatisticsItem
+import io.github.wulkanowy.databinding.ItemGradeStatisticsBarBinding
+import io.github.wulkanowy.databinding.ItemGradeStatisticsPieBinding
 import io.github.wulkanowy.utils.getThemeAttrColor
-import kotlinx.android.synthetic.main.item_grade_statistics_bar.view.*
-import kotlinx.android.synthetic.main.item_grade_statistics_pie.view.*
 import javax.inject.Inject
 
 class GradeStatisticsAdapter @Inject constructor() :
@@ -32,6 +32,8 @@ class GradeStatisticsAdapter @Inject constructor() :
     var items = emptyList<GradeStatisticsItem>()
 
     var theme: String = "vulcan"
+
+    var showAllSubjectsOnList: Boolean = false
 
     private val vulcanGradeColors = listOf(
         6 to R.color.grade_vulcan_six,
@@ -60,34 +62,40 @@ class GradeStatisticsAdapter @Inject constructor() :
         "6, 6-", "5, 5-, 5+", "4, 4-, 4+", "3, 3-, 3+", "2, 2-, 2+", "1, 1+"
     )
 
-    override fun getItemCount() = items.size
+    override fun getItemCount() = if (showAllSubjectsOnList) items.size else (if (items.isEmpty()) 0 else 1)
 
-    override fun getItemViewType(position: Int): Int {
-        return when (items[position].type) {
-            ViewType.SEMESTER, ViewType.PARTIAL -> R.layout.item_grade_statistics_pie
-            ViewType.POINTS -> R.layout.item_grade_statistics_bar
-        }
-    }
+    override fun getItemViewType(position: Int) = items[position].type.id
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val viewHolder = LayoutInflater.from(parent.context).inflate(viewType, parent, false)
+        val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
-            R.layout.item_grade_statistics_bar -> GradeStatisticsBar(viewHolder)
-            else -> GradeStatisticsPie(viewHolder)
+            ViewType.PARTIAL.id -> PartialViewHolder(ItemGradeStatisticsPieBinding.inflate(inflater, parent, false))
+            ViewType.SEMESTER.id -> SemesterViewHolder(ItemGradeStatisticsPieBinding.inflate(inflater, parent, false))
+            ViewType.POINTS.id -> PointsViewHolder(ItemGradeStatisticsBarBinding.inflate(inflater, parent, false))
+            else -> throw IllegalStateException()
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is GradeStatisticsPie -> bindPieChart(holder, items[position].partial)
-            is GradeStatisticsBar -> bindBarChart(holder, items[position].points!!)
+            is PartialViewHolder -> bindPartialChart(holder, items[position].partial!!)
+            is SemesterViewHolder -> bindSemesterChart(holder, items[position].semester!!)
+            is PointsViewHolder -> bindBarChart(holder, items[position].points!!)
         }
     }
 
-    private fun bindPieChart(holder: GradeStatisticsPie, partials: List<GradeStatistics>) {
-        with(holder.view.gradeStatisticsPieTitle) {
-            text = partials.firstOrNull()?.subject
-            visibility = if (items.size == 1) GONE else VISIBLE
+    private fun bindPartialChart(holder: PartialViewHolder, partials: GradePartialStatistics) {
+        bindPieChart(holder.binding, partials.subject, partials.classAverage, partials.classAmounts)
+    }
+
+    private fun bindSemesterChart(holder: SemesterViewHolder, semester: GradeSemesterStatistics) {
+        bindPieChart(holder.binding, semester.subject, semester.average, semester.amounts)
+    }
+
+    private fun bindPieChart(binding: ItemGradeStatisticsPieBinding, subject: String, average: String, amounts: List<Int>) {
+        with(binding.gradeStatisticsPieTitle) {
+            text = subject
+            visibility = if (items.size == 1 || !showAllSubjectsOnList) GONE else VISIBLE
         }
 
         val gradeColors = when (theme) {
@@ -95,22 +103,23 @@ class GradeStatisticsAdapter @Inject constructor() :
             else -> materialGradeColors
         }
 
-        val dataset = PieDataSet(partials.map {
-            PieEntry(it.amount.toFloat(), it.grade.toString())
-        }, "Legenda")
+        val dataset = PieDataSet(amounts.mapIndexed { grade, amount ->
+            PieEntry(amount.toFloat(), (grade + 1).toString())
+        }.reversed().filterNot { it.value == 0f }, "Legenda")
 
         with(dataset) {
             valueTextSize = 12f
             sliceSpace = 1f
             valueTextColor = Color.WHITE
-            setColors(partials.map {
-                gradeColors.single { color -> color.first == it.grade }.second
-            }.toIntArray(), holder.view.context)
+            val grades = amounts.mapIndexed { grade, amount -> (grade + 1) to amount }.filterNot { it.second == 0 }
+            setColors(grades.reversed().map { (grade, _) ->
+                gradeColors.single { color -> color.first == grade }.second
+            }.toIntArray(), binding.root.context)
         }
 
-        with(holder.view.gradeStatisticsPie) {
+        with(binding.gradeStatisticsPie) {
             setTouchEnabled(false)
-            if (partials.size == 1) animateXY(1000, 1000)
+            if (amounts.size == 1) animateXY(1000, 1000)
             data = PieData(dataset).apply {
                 setValueFormatter(object : ValueFormatter() {
                     override fun getPieLabel(value: Float, pieEntry: PieEntry): String {
@@ -131,8 +140,9 @@ class GradeStatisticsAdapter @Inject constructor() :
 
             minAngleForSlices = 25f
             description.isEnabled = false
-            centerText = partials.fold(0) { acc, it -> acc + it.amount }
-                .let { resources.getQuantityString(R.plurals.grade_number_item, it, it) }
+            centerText = amounts.fold(0) { acc, it -> acc + it }
+                .let { resources.getQuantityString(R.plurals.grade_number_item, it, it) } +
+                ("\n\nŚrednia: $average").takeIf { average.isNotBlank() }.orEmpty()
 
             setHoleColor(context.getThemeAttrColor(android.R.attr.windowBackground))
             setCenterTextColor(context.getThemeAttrColor(android.R.attr.textColorPrimary))
@@ -140,8 +150,8 @@ class GradeStatisticsAdapter @Inject constructor() :
         }
     }
 
-    private fun bindBarChart(holder: GradeStatisticsBar, points: GradePointsStatistics) {
-        with(holder.view.gradeStatisticsBarTitle) {
+    private fun bindBarChart(holder: PointsViewHolder, points: GradePointsStatistics) {
+        with(holder.binding.gradeStatisticsBarTitle) {
             text = points.subject
             visibility = if (items.size == 1) GONE else VISIBLE
         }
@@ -153,14 +163,14 @@ class GradeStatisticsAdapter @Inject constructor() :
 
         with(dataset) {
             valueTextSize = 12f
-            valueTextColor = holder.view.context.getThemeAttrColor(android.R.attr.textColorPrimary)
+            valueTextColor = holder.binding.root.context.getThemeAttrColor(android.R.attr.textColorPrimary)
             valueFormatter = object : ValueFormatter() {
                 override fun getBarLabel(barEntry: BarEntry) = "${barEntry.y}%"
             }
             colors = gradePointsColors
         }
 
-        with(holder.view.gradeStatisticsBar) {
+        with(holder.binding.gradeStatisticsBar) {
             setTouchEnabled(false)
             if (items.size == 1) animateXY(1000, 1000)
             data = BarData(dataset).apply {
@@ -183,7 +193,7 @@ class GradeStatisticsAdapter @Inject constructor() :
 
             description.isEnabled = false
 
-            holder.view.context.getThemeAttrColor(android.R.attr.textColorPrimary).let {
+            holder.binding.root.context.getThemeAttrColor(android.R.attr.textColorPrimary).let {
                 axisLeft.textColor = it
                 axisRight.textColor = it
             }
@@ -203,7 +213,12 @@ class GradeStatisticsAdapter @Inject constructor() :
         }
     }
 
-    class GradeStatisticsPie(val view: View) : RecyclerView.ViewHolder(view)
+    private class PartialViewHolder(val binding: ItemGradeStatisticsPieBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
-    class GradeStatisticsBar(val view: View) : RecyclerView.ViewHolder(view)
+    private class SemesterViewHolder(val binding: ItemGradeStatisticsPieBinding) :
+        RecyclerView.ViewHolder(binding.root)
+
+    private class PointsViewHolder(val binding: ItemGradeStatisticsBarBinding) :
+        RecyclerView.ViewHolder(binding.root)
 }

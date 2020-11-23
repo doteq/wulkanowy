@@ -29,12 +29,18 @@
         <item>Polski</item>
         <item>English</item>
         <item>Pусский</item>
+        <item>Українська</item>
+        <item>Deutsch</item>
+        <item>Čeština</item>
     </string-array>
     <string-array name="app_language_values" translatable="false">
         <item>system</item>
         <item>pl</item>
         <item>en</item>
         <item>ru</item>
+        <item>uk</item>
+        <item>de</item>
+        <item>cs</item>
     </string-array>
 
     <string-array name="services_interval_entries">
@@ -71,6 +77,15 @@
         <item>0.75</item>
     </string-array>
 
+    <string-array name="grade_sorting_mode_entries">
+        <item>Alphabetically</item>
+        <item>By date</item>
+    </string-array>
+    <string-array name="grade_sorting_mode_values" translatable="false">
+        <item>alphabetic</item>
+        <item>date</item>
+    </string-array>
+
     <string-array name="grade_color_scheme_entries">
         <item>Dzienniczek+</item>
         <item>Wulkanowy</item>
@@ -84,10 +99,12 @@
 
     <string-array name="grade_average_mode_entries">
         <item>Average of grades only from the 2nd semester</item>
+        <item>Average of grades from both semesters</item>
         <item>Average of grades from the whole year</item>
     </string-array>
     <string-array name="grade_average_mode_values" translatable="false">
         <item>only_one_semester</item>
+        <item>both_semesters</item>
         <item>all_year</item>
     </string-array>
 

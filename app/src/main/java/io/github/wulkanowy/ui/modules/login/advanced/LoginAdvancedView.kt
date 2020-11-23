@@ -1,6 +1,6 @@
 package io.github.wulkanowy.ui.modules.login.advanced
 
-import io.github.wulkanowy.data.db.entities.Student
+import io.github.wulkanowy.data.db.entities.StudentWithSemesters
 import io.github.wulkanowy.ui.base.BaseView
 
 interface LoginAdvancedView : BaseView {
@@ -27,6 +27,12 @@ interface LoginAdvancedView : BaseView {
 
     fun initView()
 
+    fun showMobileApiWarningMessage()
+
+    fun showScraperWarningMessage()
+
+    fun showHybridWarningMessage()
+
     fun setDefaultCredentials(username: String, pass: String, symbol: String, token: String, pin: String)
 
     fun setUsernameLabel(label: String)
@@ -34,6 +40,10 @@ interface LoginAdvancedView : BaseView {
     fun setSymbol(symbol: String)
 
     fun setErrorUsernameRequired()
+
+    fun setErrorLoginRequired()
+
+    fun setErrorEmailRequired()
 
     fun setErrorPassRequired(focus: Boolean)
 
@@ -59,7 +69,7 @@ interface LoginAdvancedView : BaseView {
 
     fun showContent(show: Boolean)
 
-    fun notifyParentAccountLogged(students: List<Student>)
+    fun notifyParentAccountLogged(studentsWithSemesters: List<StudentWithSemesters>)
 
     fun setErrorPinRequired()
 

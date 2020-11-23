@@ -11,22 +11,20 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.viewbinding.ViewBinding
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.snackbar.Snackbar.LENGTH_LONG
-import dagger.android.AndroidInjection
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasAndroidInjector
 import io.github.wulkanowy.R
 import io.github.wulkanowy.ui.modules.login.LoginActivity
 import io.github.wulkanowy.utils.FragmentLifecycleLogger
 import io.github.wulkanowy.utils.getThemeAttrColor
+import io.github.wulkanowy.utils.lifecycleAwareVariable
 import javax.inject.Inject
 
-abstract class BaseActivity<T : BasePresenter<out BaseView>> : AppCompatActivity(), BaseView,
-    HasAndroidInjector {
+abstract class BaseActivity<T : BasePresenter<out BaseView>, VB : ViewBinding> :
+    AppCompatActivity(), BaseView {
 
-    @Inject
-    lateinit var androidInjector: DispatchingAndroidInjector<Any>
+    protected var binding: VB by lifecycleAwareVariable()
 
     @Inject
     lateinit var fragmentLifecycleLogger: FragmentLifecycleLogger
@@ -38,8 +36,7 @@ abstract class BaseActivity<T : BasePresenter<out BaseView>> : AppCompatActivity
 
     abstract var presenter: T
 
-    public override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
+    override fun onCreate(savedInstanceState: Bundle?) {
         themeManager.applyActivityTheme(this)
         super.onCreate(savedInstanceState)
         supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentLifecycleLogger, true)
@@ -87,6 +84,4 @@ abstract class BaseActivity<T : BasePresenter<out BaseView>> : AppCompatActivity
         invalidateOptionsMenu()
         presenter.onDetachView()
     }
-
-    override fun androidInjector() = androidInjector
 }

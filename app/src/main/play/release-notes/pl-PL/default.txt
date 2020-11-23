@@ -1,8 +1,6 @@
-Wersja 0.15.0
-
-- dodaliśmy funkcję usprawiedliwiania nieobecności
-- w trybie hybrydowym i mobilnym pokazują się teraz domyślnie tylko lekcje grupy ucznia
-- odświezyliśmy wygląd okienka ze szczegółami oceny
-- dokonaliśmy kilku poprawek dla systemu punktowego: suma punktów wyświetla się teraz w szczegółach ocen, a w widoku ucznia na tle klasy wykres jest w końcu poprawnie skalowany
+Wersja 0.22.2
+- naprawiliśmy problem z wyświetlaniem pozycji na liście ocen
+- zmieniliśmy komunikaty o błędach, które powinny być teraz czytelniejsze dla większej liczby użytkowników
+- zwiększyliśmy maksymalny czas, przez który aplikacja będzie próbowała łączyć się z dziennikiem do 1 minuty
 
 Pełna lista zmian: https://github.com/wulkanowy/wulkanowy/releases

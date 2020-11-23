@@ -2,15 +2,14 @@ package io.github.wulkanowy.ui.modules.more
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import eu.davidea.flexibleadapter.FlexibleAdapter
-import eu.davidea.flexibleadapter.common.SmoothScrollLinearLayoutManager
-import eu.davidea.flexibleadapter.items.AbstractFlexibleItem
+import androidx.recyclerview.widget.LinearLayoutManager
+import dagger.hilt.android.AndroidEntryPoint
 import io.github.wulkanowy.R
+import io.github.wulkanowy.databinding.FragmentMoreBinding
 import io.github.wulkanowy.ui.base.BaseFragment
 import io.github.wulkanowy.ui.modules.about.AboutFragment
+import io.github.wulkanowy.ui.modules.conference.ConferenceFragment
 import io.github.wulkanowy.ui.modules.homework.HomeworkFragment
 import io.github.wulkanowy.ui.modules.luckynumber.LuckyNumberFragment
 import io.github.wulkanowy.ui.modules.main.MainActivity
@@ -21,17 +20,17 @@ import io.github.wulkanowy.ui.modules.note.NoteFragment
 import io.github.wulkanowy.ui.modules.schoolandteachers.SchoolAndTeachersFragment
 import io.github.wulkanowy.ui.modules.settings.SettingsFragment
 import io.github.wulkanowy.utils.getCompatDrawable
-import io.github.wulkanowy.utils.setOnItemClickListener
-import kotlinx.android.synthetic.main.fragment_more.*
 import javax.inject.Inject
 
-class MoreFragment : BaseFragment(), MoreView, MainView.TitledView, MainView.MainChildView {
+@AndroidEntryPoint
+class MoreFragment : BaseFragment<FragmentMoreBinding>(R.layout.fragment_more), MoreView,
+    MainView.TitledView, MainView.MainChildView {
 
     @Inject
     lateinit var presenter: MorePresenter
 
     @Inject
-    lateinit var moreAdapter: FlexibleAdapter<AbstractFlexibleItem<*>>
+    lateinit var moreAdapter: MoreAdapter
 
     companion object {
         fun newInstance() = MoreFragment()
@@ -55,6 +54,9 @@ class MoreFragment : BaseFragment(), MoreView, MainView.TitledView, MainView.Mai
     override val mobileDevicesRes: Pair<String, Drawable?>?
         get() = context?.run { getString(R.string.mobile_devices_title) to getCompatDrawable(R.drawable.ic_more_mobile_devices) }
 
+    override val conferencesRes: Pair<String, Drawable?>?
+        get() = context?.run { getString(R.string.conferences_title) to getCompatDrawable(R.drawable.ic_more_conferences) }
+
     override val schoolAndTeachersRes: Pair<String, Drawable?>?
         get() = context?.run { getString(R.string.schoolandteachers_title) to getCompatDrawable((R.drawable.ic_more_schoolandteachers)) }
 
@@ -64,20 +66,17 @@ class MoreFragment : BaseFragment(), MoreView, MainView.TitledView, MainView.Mai
     override val aboutRes: Pair<String, Drawable?>?
         get() = context?.run { getString(R.string.about_title) to getCompatDrawable(R.drawable.ic_all_about) }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_more, container, false)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding = FragmentMoreBinding.bind(view)
         presenter.onAttachView(this)
     }
 
     override fun initView() {
-        moreAdapter.setOnItemClickListener { presenter.onItemSelected(it) }
+        moreAdapter.onClickListener = presenter::onItemSelected
 
-        moreRecycler.apply {
-            layoutManager = SmoothScrollLinearLayoutManager(context)
+        with(binding.moreRecycler) {
+            layoutManager = LinearLayoutManager(context)
             adapter = moreAdapter
         }
     }
@@ -86,8 +85,11 @@ class MoreFragment : BaseFragment(), MoreView, MainView.TitledView, MainView.Mai
         if (::presenter.isInitialized) presenter.onViewReselected()
     }
 
-    override fun updateData(data: List<MoreItem>) {
-        moreAdapter.updateDataSet(data)
+    override fun updateData(data: List<Pair<String, Drawable?>>) {
+        with(moreAdapter) {
+            items = data
+            notifyDataSetChanged()
+        }
     }
 
     override fun openMessagesView() {
@@ -108,6 +110,10 @@ class MoreFragment : BaseFragment(), MoreView, MainView.TitledView, MainView.Mai
 
     override fun openMobileDevicesView() {
         (activity as? MainActivity)?.pushView(MobileDeviceFragment.newInstance())
+    }
+
+    override fun openConferencesView() {
+        (activity as? MainActivity)?.pushView(ConferenceFragment.newInstance())
     }
 
     override fun openSchoolAndTeachersView() {

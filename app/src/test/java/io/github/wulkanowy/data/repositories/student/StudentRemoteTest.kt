@@ -1,36 +1,32 @@
 package io.github.wulkanowy.data.repositories.student
 
-import io.github.wulkanowy.data.SdkHelper
 import io.github.wulkanowy.sdk.Sdk
 import io.github.wulkanowy.sdk.pojo.Student
-import io.mockk.impl.annotations.SpyK
-import io.reactivex.Single
+import io.mockk.MockKAnnotations
+import io.mockk.coEvery
+import io.mockk.impl.annotations.MockK
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mock
-import org.mockito.Mockito.anyBoolean
-import org.mockito.Mockito.anyString
-import org.mockito.Mockito.doReturn
-import org.mockito.MockitoAnnotations
 
 class StudentRemoteTest {
 
-    @Mock
+    @MockK
     private lateinit var mockSdk: Sdk
 
     @Before
     fun initApi() {
-        MockitoAnnotations.initMocks(this)
+        MockKAnnotations.init(this)
     }
 
     @Test
     fun testRemoteAll() {
-        doReturn(Single.just(listOf(getStudent("test")))).`when`(mockSdk).getStudentsFromScrapper(anyString(), anyString(), anyString(), anyString())
+        coEvery { mockSdk.getStudentsFromScrapper(any(), any(), any(), any()) } returns listOf(getStudent("test"))
 
-        val students = StudentRemote(mockSdk).getStudentsScrapper("", "", "http://fakelog.cf", "").blockingGet()
+        val students = runBlocking { StudentRemote(mockSdk).getStudentsScrapper("", "", "http://fakelog.cf", "") }
         assertEquals(1, students.size)
-        assertEquals("test", students.first().studentName)
+        assertEquals("test Kowalski", students.first().student.studentName)
     }
 
     private fun getStudent(name: String): Student {
@@ -39,8 +35,12 @@ class StudentRemoteTest {
             symbol = "",
             studentId = 0,
             userLoginId = 0,
+            userLogin = "",
+            userName = "",
             studentName = name,
+            studentSurname = "Kowalski",
             schoolSymbol = "",
+            schoolShortName = "",
             schoolName = "",
             className = "",
             classId = 0,
@@ -50,7 +50,8 @@ class StudentRemoteTest {
             mobileBaseUrl = "",
             loginType = Sdk.ScrapperLoginType.STANDARD,
             scrapperBaseUrl = "",
-            isParent = false
+            isParent = false,
+            semesters = emptyList()
         )
     }
 }

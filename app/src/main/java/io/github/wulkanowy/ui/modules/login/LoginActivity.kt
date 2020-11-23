@@ -4,8 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import io.github.wulkanowy.R
-import io.github.wulkanowy.data.db.entities.Student
+import dagger.hilt.android.AndroidEntryPoint
+import io.github.wulkanowy.data.db.entities.StudentWithSemesters
+import io.github.wulkanowy.databinding.ActivityLoginBinding
 import io.github.wulkanowy.ui.base.BaseActivity
 import io.github.wulkanowy.ui.base.BaseFragmentPagerAdapter
 import io.github.wulkanowy.ui.modules.login.advanced.LoginAdvancedFragment
@@ -13,32 +14,47 @@ import io.github.wulkanowy.ui.modules.login.form.LoginFormFragment
 import io.github.wulkanowy.ui.modules.login.recover.LoginRecoverFragment
 import io.github.wulkanowy.ui.modules.login.studentselect.LoginStudentSelectFragment
 import io.github.wulkanowy.ui.modules.login.symbol.LoginSymbolFragment
+import io.github.wulkanowy.utils.UpdateHelper
 import io.github.wulkanowy.utils.setOnSelectPageListener
-import kotlinx.android.synthetic.main.activity_login.*
 import javax.inject.Inject
 
-class LoginActivity : BaseActivity<LoginPresenter>(), LoginView {
+@AndroidEntryPoint
+class LoginActivity : BaseActivity<LoginPresenter, ActivityLoginBinding>(), LoginView {
 
     @Inject
     override lateinit var presenter: LoginPresenter
 
+    private val loginAdapter = BaseFragmentPagerAdapter(supportFragmentManager)
+
     @Inject
-    lateinit var loginAdapter: BaseFragmentPagerAdapter
+    lateinit var updateHelper: UpdateHelper
 
     companion object {
 
         fun getStartIntent(context: Context) = Intent(context, LoginActivity::class.java)
     }
 
-    override val currentViewIndex get() = loginViewpager.currentItem
+    override val currentViewIndex get() = binding.loginViewpager.currentItem
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
-        setSupportActionBar(loginToolbar)
-        messageContainer = loginContainer
+        setContentView(ActivityLoginBinding.inflate(layoutInflater).apply { binding = this }.root)
+        setSupportActionBar(binding.loginToolbar)
+        messageContainer = binding.loginContainer
+        updateHelper.messageContainer = binding.loginContainer
 
         presenter.onAttachView(this)
+        updateHelper.checkAndInstallUpdates(this)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateHelper.onResume(this)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        updateHelper.onActivityResult(requestCode, resultCode)
     }
 
     override fun initView() {
@@ -48,7 +64,7 @@ class LoginActivity : BaseActivity<LoginPresenter>(), LoginView {
         }
 
         with(loginAdapter) {
-            containerId = loginViewpager.id
+            containerId = binding.loginViewpager.id
             addFragments(listOf(
                 LoginFormFragment.newInstance(),
                 LoginSymbolFragment.newInstance(),
@@ -58,7 +74,7 @@ class LoginActivity : BaseActivity<LoginPresenter>(), LoginView {
             ))
         }
 
-        with(loginViewpager) {
+        with(binding.loginViewpager) {
             offscreenPageLimit = 2
             adapter = loginAdapter
             setOnSelectPageListener(presenter::onViewSelected)
@@ -71,7 +87,7 @@ class LoginActivity : BaseActivity<LoginPresenter>(), LoginView {
     }
 
     override fun switchView(index: Int) {
-        loginViewpager.setCurrentItem(index, false)
+        binding.loginViewpager.setCurrentItem(index, false)
     }
 
     override fun showActionBar(show: Boolean) {
@@ -86,16 +102,16 @@ class LoginActivity : BaseActivity<LoginPresenter>(), LoginView {
         (loginAdapter.getFragmentInstance(1) as? LoginSymbolFragment)?.onParentInitSymbolFragment(loginData)
     }
 
-    override fun notifyInitStudentSelectFragment(students: List<Student>) {
-        (loginAdapter.getFragmentInstance(2) as? LoginStudentSelectFragment)?.onParentInitStudentSelectFragment(students)
+    override fun notifyInitStudentSelectFragment(studentsWithSemesters: List<StudentWithSemesters>) {
+        (loginAdapter.getFragmentInstance(2) as? LoginStudentSelectFragment)?.onParentInitStudentSelectFragment(studentsWithSemesters)
     }
 
-    fun onFormFragmentAccountLogged(students: List<Student>, loginData: Triple<String, String, String>) {
-        presenter.onFormViewAccountLogged(students, loginData)
+    fun onFormFragmentAccountLogged(studentsWithSemesters: List<StudentWithSemesters>, loginData: Triple<String, String, String>) {
+        presenter.onFormViewAccountLogged(studentsWithSemesters, loginData)
     }
 
-    fun onSymbolFragmentAccountLogged(students: List<Student>) {
-        presenter.onSymbolViewAccountLogged(students)
+    fun onSymbolFragmentAccountLogged(studentsWithSemesters: List<StudentWithSemesters>) {
+        presenter.onSymbolViewAccountLogged(studentsWithSemesters)
     }
 
     fun onAdvancedLoginClick() {

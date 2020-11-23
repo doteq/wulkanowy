@@ -8,34 +8,36 @@ import android.appwidget.AppWidgetManager.ACTION_APPWIDGET_DELETED
 import android.appwidget.AppWidgetManager.ACTION_APPWIDGET_UPDATE
 import android.appwidget.AppWidgetManager.EXTRA_APPWIDGET_ID
 import android.appwidget.AppWidgetManager.EXTRA_APPWIDGET_IDS
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
+import android.content.res.Configuration
 import android.widget.RemoteViews
-import dagger.android.AndroidInjection
+import dagger.hilt.android.AndroidEntryPoint
 import io.github.wulkanowy.R
 import io.github.wulkanowy.data.db.SharedPrefProvider
 import io.github.wulkanowy.data.db.entities.Student
 import io.github.wulkanowy.data.exceptions.NoCurrentStudentException
 import io.github.wulkanowy.data.repositories.student.StudentRepository
+import io.github.wulkanowy.services.HiltBroadcastReceiver
 import io.github.wulkanowy.services.widgets.TimetableWidgetService
 import io.github.wulkanowy.ui.modules.main.MainActivity
 import io.github.wulkanowy.ui.modules.main.MainView
-import io.github.wulkanowy.utils.FirebaseAnalyticsHelper
-import io.github.wulkanowy.utils.SchedulersProvider
+import io.github.wulkanowy.utils.AnalyticsHelper
 import io.github.wulkanowy.utils.nextOrSameSchoolDay
 import io.github.wulkanowy.utils.nextSchoolDay
 import io.github.wulkanowy.utils.previousSchoolDay
 import io.github.wulkanowy.utils.toFormattedString
-import io.reactivex.Maybe
-import org.threeten.bp.LocalDate
-import org.threeten.bp.LocalDate.now
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.time.LocalDate
+import java.time.LocalDate.now
 import javax.inject.Inject
 
-class TimetableWidgetProvider : BroadcastReceiver() {
+@AndroidEntryPoint
+class TimetableWidgetProvider : HiltBroadcastReceiver() {
 
     @Inject
     lateinit var appWidgetManager: AppWidgetManager
@@ -47,10 +49,7 @@ class TimetableWidgetProvider : BroadcastReceiver() {
     lateinit var sharedPref: SharedPrefProvider
 
     @Inject
-    lateinit var schedulers: SchedulersProvider
-
-    @Inject
-    lateinit var analytics: FirebaseAnalyticsHelper
+    lateinit var analytics: AnalyticsHelper
 
     companion object {
 
@@ -71,17 +70,21 @@ class TimetableWidgetProvider : BroadcastReceiver() {
         fun getStudentWidgetKey(appWidgetId: Int) = "timetable_widget_student_$appWidgetId"
 
         fun getThemeWidgetKey(appWidgetId: Int) = "timetable_widget_theme_$appWidgetId"
+
+        fun getCurrentThemeWidgetKey(appWidgetId: Int) = "timetable_widget_current_theme_$appWidgetId"
     }
 
     override fun onReceive(context: Context, intent: Intent) {
-        AndroidInjection.inject(this, context)
-        when (intent.action) {
-            ACTION_APPWIDGET_UPDATE -> onUpdate(context, intent)
-            ACTION_APPWIDGET_DELETED -> onDelete(intent)
+        super.onReceive(context, intent)
+        GlobalScope.launch {
+            when (intent.action) {
+                ACTION_APPWIDGET_UPDATE -> onUpdate(context, intent)
+                ACTION_APPWIDGET_DELETED -> onDelete(intent)
+            }
         }
     }
 
-    private fun onUpdate(context: Context, intent: Intent) {
+    private suspend fun onUpdate(context: Context, intent: Intent) {
         if (intent.getStringExtra(EXTRA_BUTTON_TYPE) === null) {
             intent.getIntArrayExtra(EXTRA_APPWIDGET_IDS)?.forEach { appWidgetId ->
                 val student = getStudent(sharedPref.getLong(getStudentWidgetKey(appWidgetId), 0), appWidgetId)
@@ -110,14 +113,23 @@ class TimetableWidgetProvider : BroadcastReceiver() {
             with(sharedPref) {
                 delete(getStudentWidgetKey(appWidgetId))
                 delete(getDateWidgetKey(appWidgetId))
+                delete(getThemeWidgetKey(appWidgetId))
+                delete(getCurrentThemeWidgetKey(appWidgetId))
             }
         }
     }
 
     @SuppressLint("DefaultLocale")
     private fun updateWidget(context: Context, appWidgetId: Int, date: LocalDate, student: Student?) {
-        val savedTheme = sharedPref.getLong(getThemeWidgetKey(appWidgetId), 0)
-        val layoutId = if (savedTheme == 0L) R.layout.widget_timetable else R.layout.widget_timetable_dark
+        val savedConfigureTheme = sharedPref.getLong(getThemeWidgetKey(appWidgetId), 0)
+        val isSystemDarkMode = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+        var currentTheme = 0L
+        var layoutId = R.layout.widget_timetable
+
+        if (savedConfigureTheme == 1L || (savedConfigureTheme == 2L && isSystemDarkMode)) {
+            currentTheme = 1L
+            layoutId = R.layout.widget_timetable_dark
+        }
 
         val nextNavIntent = createNavIntent(context, appWidgetId, appWidgetId, BUTTON_NEXT)
         val prevNavIntent = createNavIntent(context, -appWidgetId, appWidgetId, BUTTON_PREV)
@@ -150,10 +162,15 @@ class TimetableWidgetProvider : BroadcastReceiver() {
             setPendingIntentTemplate(R.id.timetableWidgetList, appIntent)
         }
 
-        sharedPref.putLong(getDateWidgetKey(appWidgetId), date.toEpochDay(), true)
+        with(sharedPref) {
+            putLong(getCurrentThemeWidgetKey(appWidgetId), currentTheme)
+            putLong(getDateWidgetKey(appWidgetId), date.toEpochDay(), true)
+        }
+
         with(appWidgetManager) {
-            notifyAppWidgetViewDataChanged(appWidgetId, R.id.timetableWidgetList)
             updateAppWidget(appWidgetId, remoteView)
+            notifyAppWidgetViewDataChanged(appWidgetId, R.id.timetableWidgetList)
+            Timber.d("TimetableWidgetProvider updated")
         }
     }
 
@@ -166,31 +183,22 @@ class TimetableWidgetProvider : BroadcastReceiver() {
             }, FLAG_UPDATE_CURRENT)
     }
 
-    private fun getStudent(studentId: Long, appWidgetId: Int): Student? {
-        return try {
-            studentRepository.isStudentSaved()
-                .filter { true }
-                .flatMap { studentRepository.getSavedStudents(false).toMaybe() }
-                .flatMap { students ->
-                    val student = students.singleOrNull { student -> student.id == studentId }
-                    when {
-                        student != null -> Maybe.just(student)
-                        studentId != 0L -> {
-                            studentRepository.isCurrentStudentSet()
-                                .filter { true }
-                                .flatMap { studentRepository.getCurrentStudent(false).toMaybe() }
-                                .doOnSuccess { sharedPref.putLong(getStudentWidgetKey(appWidgetId), it.id) }
-                        }
-                        else -> Maybe.empty()
-                    }
+    private suspend fun getStudent(studentId: Long, appWidgetId: Int) = try {
+        val students = studentRepository.getSavedStudents(false)
+        val student = students.singleOrNull { it -> it.student.id == studentId }?.student
+        when {
+            student != null -> student
+            studentId != 0L && studentRepository.isCurrentStudentSet() -> {
+                studentRepository.getCurrentStudent(false).also {
+                    sharedPref.putLong(getStudentWidgetKey(appWidgetId), it.id)
                 }
-                .subscribeOn(schedulers.backgroundThread)
-                .blockingGet()
-        } catch (e: Exception) {
-            if (e.cause !is NoCurrentStudentException) {
-                Timber.e(e, "An error has occurred in timetable widget provider")
             }
-            null
+            else -> null
         }
+    } catch (e: Exception) {
+        if (e.cause !is NoCurrentStudentException) {
+            Timber.e(e, "An error has occurred in timetable widget provider")
+        }
+        null
     }
 }

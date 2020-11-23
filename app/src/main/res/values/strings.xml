@@ -1,7 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Wulkanowy</string>
-
-
     <!--Activity/Fragment title-->
     <string name="login_title">Login</string>
     <string name="main_title">Wulkanowy</string>
@@ -13,7 +11,7 @@
     <string name="more_title">More</string>
     <string name="about_title">About</string>
     <string name="logviewer_title">Log viewer</string>
-    <string name="creators_title">Creators</string>
+    <string name="contributors_title">Contributors</string>
     <string name="license_title">Licenses</string>
     <string name="message_title">Messages</string>
     <string name="send_message_title">New message</string>
@@ -21,18 +19,19 @@
     <string name="homework_title">Homework</string>
     <string name="account_title">Choose account</string>
 
+
     <!--Subtitles-->
-    <string name="grade_subtitle">Semester %d, %d/%d</string>
+    <string name="grade_subtitle">Semester %1$d, %2$d/%3$d</string>
 
 
     <!--Login-->
     <string name="login_header_default">Sign in with the student or parent account</string>
-    <string name="login_header_symbol">Enter the symbol</string>
+    <string name="login_header_symbol">Enter the symbol from the register page</string>
     <string name="login_nickname_hint">Username</string>
     <string name="login_email_hint">Email</string>
     <string name="login_login_pesel_email_hint">Login, PESEL or e-mail</string>
     <string name="login_password_hint">Password</string>
-    <string name="login_host_hint">UONET+ Register</string>
+    <string name="login_host_hint">UONET+ register variant</string>
     <string name="login_type_api">Mobile API</string>
     <string name="login_type_scrapper">Scraper</string>
     <string name="login_type_hybrid">Hybrid</string>
@@ -42,25 +41,31 @@
     <string name="login_symbol_hint">Symbol</string>
     <string name="login_sign_in">Sign in</string>
     <string name="login_invalid_password">Password too short</string>
-    <string name="login_incorrect_password">Login details are incorrect</string>
+    <string name="login_incorrect_password">Login details are incorrect. Make sure the correct UONET+ register variation is selected in the field below</string>
     <string name="login_invalid_pin">Invalid PIN</string>
     <string name="login_invalid_token">Invalid token</string>
     <string name="login_expired_token">Token expired</string>
     <string name="login_invalid_email">Invalid email</string>
+    <string name="login_invalid_login">Use the assigned login instead of email</string>
     <string name="login_invalid_symbol">Invalid symbol</string>
-    <string name="login_incorrect_symbol">Student not found. Check the symbol</string>
+    <string name="login_incorrect_symbol">Student not found. Validate the symbol and the chosen variation of the UONET+ register</string>
     <string name="login_field_required">This field is required</string>
     <string name="login_duplicate_student">Selected student is already logged in</string>
-    <string name="login_symbol_helper">The symbol can be found on the register page in Uczeń -> Dostęp Mobilny -> Zarejestruj urządzenie mobilne</string>
+    <string name="login_symbol_helper">The symbol can be found on the register page in&#160;<b>Uczeń</b> →&#160;<b>Dostęp Mobilny</b> →&#160;<b>Zarejestruj urządzenie mobilne</b>.\n\nMake sure that you have set the appropriate register variant in the <b>UONET+ register variant</b> field on the previous screen. Wulkanowy does not detect pre-school students at the moment</string>
     <string name="login_select_student">Select students to log in to the application</string>
     <string name="login_advanced">Other options</string>
+    <string name="login_advanced_warning_mobile_api">In this mode, a lucky number does not work, a class grade stats, summary of attendance, excuse for absence, completed lessons, school information and preview of the list of registered devices</string>
+    <string name="login_advanced_warning_scraper">This mode displays the same data as it appears on the register website</string>
+    <string name="login_advanced_warning_hybrid">The combination of the best features of the other two modes. It works faster than scraper and provides features not available in the Mobile API mode. It is in the experimental phase</string>
     <string name="login_privacy_policy">Privacy policy</string>
     <string name="login_contact_header">Trouble signing in? Contact us!</string>
     <string name="login_contact_email">Email</string>
     <string name="login_contact_discord">Discord</string>
     <string name="login_email_intent_title">Send email</string>
+    <string name="login_email_details">Describe details of problem:</string>
     <string name="login_email_subject" translatable="false">Zgłoszenie: Problemy z logowaniem</string>
-    <string name="login_email_text" translatable="false">Informacje o aplikacji:\n\nUrządzenie: %1$s\nWersja SDK: %2$s\nWersja aplikacji: %3$s\n\nOpis problemu:</string>
+    <string name="login_email_text" translatable="false">Informacje o aplikacji:\n\nUrządzenie: %1$s\nWersja SDK: %2$s\nWersja aplikacji: %3$s\nDodatkowe informacje: %4$s\nOstatni błąd: %5$s\n\nOpis problemu: </string>
+    <string name="login_recover_warning">Make sure you select the correct UONET+ register variation!</string>
     <string name="login_recover_button">I forgot my password</string>
     <string name="login_recover_title">Recover your account</string>
     <string name="login_recover">Recover</string>
@@ -108,9 +113,25 @@
         <item quantity="one">New grade</item>
         <item quantity="other">New grades</item>
     </plurals>
+    <plurals name="grade_new_items_predicted">
+        <item quantity="one">New predicted grade</item>
+        <item quantity="other">New predicted grades</item>
+    </plurals>
+    <plurals name="grade_new_items_final">
+        <item quantity="one">New final grade</item>
+        <item quantity="other">New final grades</item>
+    </plurals>
     <plurals name="grade_notify_new_items">
         <item quantity="one">You received %1$d grade</item>
         <item quantity="other">You received %1$d grades</item>
+    </plurals>
+    <plurals name="grade_notify_new_items_predicted">
+        <item quantity="one">You received %1$d predicted grade</item>
+        <item quantity="other">You received %1$d predicted grades</item>
+    </plurals>
+    <plurals name="grade_notify_new_items_final">
+        <item quantity="one">You received %1$d final grade</item>
+        <item quantity="other">You received %1$d final grades</item>
     </plurals>
 
 
@@ -121,6 +142,14 @@
     <string name="timetable_time">Hours</string>
     <string name="timetable_changes">Changes</string>
     <string name="timetable_no_items">No lessons this day</string>
+    <string name="timetable_minutes">%s min</string>
+    <string name="timetable_seconds">%s sec</string>
+    <string name="timetable_time_left">%1$s left</string>
+    <string name="timetable_time_until">in %1$s</string>
+    <string name="timetable_finished">Finished</string>
+    <string name="timetable_now">Now: %s</string>
+    <string name="timetable_next">Next: %s</string>
+    <string name="timetable_later">Later: %s</string>
 
 
     <!--Completed lessons-->
@@ -141,6 +170,8 @@
     <string name="attendance_excused_lateness">Excused lateness</string>
     <string name="attendance_unexcused_lateness">Unexcused lateness</string>
     <string name="attendance_present">Present</string>
+    <string name="attendance_deleted">Deleted</string>
+    <string name="attendance_unknown">Unknown</string>
     <string name="attendance_number">Number of lesson</string>
     <string name="attendance_no_items">No entries</string>
     <plurals name="attendance_number_absences">
@@ -181,6 +212,8 @@
     <string name="message_move_to_bin">Move to trash</string>
     <string name="message_delete_forever">Delete permanently</string>
     <string name="message_delete_success">Message deleted successfully</string>
+    <string name="message_share">Share</string>
+    <string name="message_print">Print</string>
     <string name="message_subject">Subject</string>
     <string name="message_content">Content</string>
     <string name="message_send_successful">Message sent successfully</string>
@@ -202,6 +235,7 @@
 
     <!--Note-->
     <string name="note_no_items">No info about notes</string>
+    <string name="note_points">Points</string>
     <plurals name="note_number_item">
         <item quantity="one">%d note</item>
         <item quantity="other">%d notes</item>
@@ -215,9 +249,40 @@
         <item quantity="other">You received %1$d notes</item>
     </plurals>
 
+    <!--Praise-->
+    <plurals name="praise_number_item">
+        <item quantity="one">%d praise</item>
+        <item quantity="other">%d praises</item>
+    </plurals>
+    <plurals name="praise_new_items">
+        <item quantity="one">New praise</item>
+        <item quantity="other">New praises</item>
+    </plurals>
+    <plurals name="praise_notify_new_items">
+        <item quantity="one">You received %1$d praise</item>
+        <item quantity="other">You received %1$d praises</item>
+    </plurals>
+
+    <!--Neutral notes-->
+    <plurals name="neutral_note_number_item">
+        <item quantity="one">%d neutral note</item>
+        <item quantity="other">%d neutral notes</item>
+    </plurals>
+    <plurals name="neutral_note_new_items">
+        <item quantity="one">New neutral note</item>
+        <item quantity="other">New neutral notes</item>
+    </plurals>
+    <plurals name="neutral_note_notify_new_items">
+        <item quantity="one">You received %1$d neutral note</item>
+        <item quantity="other">You received %1$d neutral notes</item>
+    </plurals>
+
 
     <!--Homework-->
     <string name="homework_no_items">No info about homework</string>
+    <string name="homework_mark_as_done">Mark as done</string>
+    <string name="homework_mark_as_undone">Mark as undone</string>
+    <string name="homework_attachments">Attachments</string>
 
 
     <!--Lucky number-->
@@ -260,42 +325,60 @@
     <string name="teacher_no_subject">No subject</string>
 
 
+    <!--Conference-->
+    <string name="conferences_title">Conferences</string>
+    <string name="conference_no_items">No info about conferences</string>
+
+
     <!--Account-->
     <string name="account_add_new">Add account</string>
     <string name="account_logout">Logout</string>
     <string name="account_confirm">Do you want to log out of an active student?</string>
     <string name="account_logout_student">Student logout</string>
+    <string name="account_type_student">Student account</string>
+    <string name="account_type_parent">Parent account</string>
+    <string name="account_login_mobile_api">Mobile API mode</string>
+    <string name="account_login_hybrid">Hybrid mode</string>
 
 
     <!--About-->
     <string name="about_version">App version</string>
-    <string name="about_creator">Creators</string>
-    <string name="about_creator_summary">List of Wulkanowy developers</string>
+    <string name="about_contributor">Contributors</string>
+    <string name="about_contributor_summary">List of Wulkanowy developers</string>
     <string name="about_feedback">Report a bug</string>
     <string name="about_feedback_summary">Send a bug report via e-mail</string>
     <string name="about_faq">FAQ</string>
     <string name="about_faq_summary">Read Frequently Asked Questions</string>
     <string name="about_discord">Discord server</string>
     <string name="about_discord_summary">Join the Wulkanowy community</string>
+    <string name="about_facebook">Facebook fanpage</string>
+    <string name="about_facebook_summary">Like our facebook fanpage</string>
     <string name="about_privacy">Privacy policy</string>
     <string name="about_privacy_summary">Rules for collecting personal data</string>
     <string name="about_homepage">Homepage</string>
     <string name="about_homepage_summary">Visit the website and help develop the application</string>
     <string name="about_licenses">Licenses</string>
     <string name="about_licenses_summary">Licenses of libraries used in the application</string>
+    <string name="about_feedback_template" translatable="false">Informacje o aplikacji:\n\nUrządzenie: %1$s\nWersja SDK: %2$s\nWersja aplikacji: %3$s\n\nTreść zgłoszenia:</string>
 
 
     <!--Licenses-->
     <string name="license_dialog_title">License</string>
 
 
-    <!--Creators-->
-    <string name="creator_avatar_description">Avatar</string>
-    <string name="creator_see_more">See more on GitHub</string>
+    <!--Contributor-->
+    <string name="contributor_avatar_description">Avatar</string>
+    <string name="contributor_see_more">See more on GitHub</string>
+
 
     <!--Log viewer-->
     <string name="logviewer_share">Share logs</string>
     <string name="logviewer_refresh">Refresh</string>
+
+
+    <!--Error dialog-->
+    <string name="dialog_error_check_update">Check for updates</string>
+    <string name="dialog_error_check_update_message">Before reporting a bug, check first if an update with the bug fix is available</string>
 
 
     <!--Generic-->
@@ -314,6 +397,8 @@
     <string name="all_subject">Subject</string>
     <string name="all_prev">Prev</string>
     <string name="all_next">Next</string>
+    <string name="all_search">Search</string>
+    <string name="all_search_hint">Search…</string>
 
 
     <!--Timetable Widget-->
@@ -321,6 +406,7 @@
     <string name="widget_timetable_theme_title">Choose theme</string>
     <string name="widget_timetable_theme_light">Light</string>
     <string name="widget_timetable_theme_dark">Dark</string>
+    <string name="widget_timetable_theme_system">System Theme</string>
 
 
     <!--Preferences-->
@@ -331,12 +417,21 @@
     <string name="pref_view_present">Show presence in attendance</string>
     <string name="pref_view_app_theme">Application theme</string>
     <string name="pref_view_expand_grade">Expand grades</string>
+    <string name="pref_view_timetable_show_timers">Mark current lesson in timetable</string>
+    <string name="pref_view_timetable_show_groups">Show groups next to subjects in timetable</string>
+    <string name="pref_view_grade_statistics_list">Show chart list in class grades</string>
     <string name="pref_view_timetable_show_whole_class">Show whole class lessons</string>
+    <string name="pref_view_subjects_without_grades">Show subjects without grades in Grades</string>
     <string name="pref_view_grade_color_scheme">Grades color scheme</string>
+    <string name="pref_view_grade_sorting_mode">Subjects sorting in "Grades"</string>
     <string name="pref_view_app_language">App language</string>
 
     <string name="pref_notify_header">Notifications</string>
     <string name="pref_notify_switch">Show notifications</string>
+    <string name="pref_notify_upcoming_lessons_switch">Show upcoming lesson notifications</string>
+    <string name="pref_notify_fix_sync_issues">Fix synchronization &amp; notifications issues</string>
+    <string name="pref_notify_fix_sync_issues_message">Your device may have data synchronization issues and with notifications.\n\nTo fix them, you need to add Wulkanowy to the autostart and turn off battery optimization/saving in the phone settings.</string>
+    <string name="pref_notify_fix_sync_issues_settings_button">Go to settings</string>
     <string name="pref_notify_debug_switch">Show debug notifications</string>
 
     <string name="pref_services_header">Synchronization</string>
@@ -344,6 +439,15 @@
     <string name="pref_services_suspended">Suspended on holidays</string>
     <string name="pref_services_interval">Updates interval</string>
     <string name="pref_services_wifi">Wi-Fi only</string>
+    <string name="pref_services_force_sync">Sync now</string>
+    <string name="pref_services_message_sync_success">Synced!</string>
+    <string name="pref_services_message_sync_failed">Sync failed</string>
+    <string name="pref_services_sync_in_progress">Sync in progress</string>
+    <string name="pref_services_dialog_force_sync_title">Synchronization</string>
+    <string name="pref_services_dialog_force_sync_summary">
+        Manual sync doesn\'t refresh app views.
+        \nTo see the synced data relaunch the app after syncing.
+    </string>
 
     <string name="pref_other_header">Other</string>
     <string name="pref_other_grade_modifier_plus">Value of the plus</string>
@@ -357,6 +461,8 @@
     <string name="channel_lucky_number">Lucky number</string>
     <string name="channel_new_message">New messages</string>
     <string name="channel_new_notes">New notes</string>
+    <string name="channel_push">Push notifications</string>
+    <string name="channel_upcoming_lessons">Upcoming lessons</string>
     <string name="channel_debug">Debug</string>
 
 
@@ -373,14 +479,22 @@
     <string name="all_copied">Copied</string>
     <string name="all_undo">Undo</string>
 
+    <!--Update helper-->
+    <string name="update_download_started">Download of updates has started…</string>
+    <string name="update_download_success">An update has just been downloaded.</string>
+    <string name="update_download_success_button">Restart</string>
+    <string name="update_failed">Update failed! Wulkanowy may not function properly. Consider updating</string>
+
 
     <!--Errors-->
     <string name="error_no_internet">No internet connection</string>
-    <string name="error_timeout">Connection to the register timed out</string>
-    <string name="error_login_failed">Login failed. Try again or restart the app</string>
+    <string name="error_timeout">Connection to register failed. Servers can be overloaded. Please try again later</string>
+    <string name="error_login_failed">Loading data failed. Please try again later</string>
+    <string name="error_password_change_required">Register password change required</string>
     <string name="error_service_unavailable">Maintenance underway UONET + register. Try again later</string>
+    <string name="error_unknown_uonet">Unknown UONET + register error. Try again later</string>
+    <string name="error_unknown_app">Unknown application error. Please try again later</string>
     <string name="error_unknown">An unexpected error occurred</string>
     <string name="error_feature_disabled">Feature disabled by your school</string>
-    <string name="error_feature_not_available">Feature not available in this mode</string>
-
+    <string name="error_feature_not_available">Feature not available. Login in a mode other than Mobile API</string>
 </resources>

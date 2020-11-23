@@ -2,14 +2,17 @@ package io.github.wulkanowy.data.repositories.preferences
 
 import android.content.Context
 import android.content.SharedPreferences
+import dagger.hilt.android.qualifiers.ApplicationContext
 import io.github.wulkanowy.R
+import io.github.wulkanowy.ui.modules.grade.GradeAverageMode
+import io.github.wulkanowy.ui.modules.grade.GradeSortingMode
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class PreferencesRepository @Inject constructor(
     private val sharedPref: SharedPreferences,
-    val context: Context
+    @ApplicationContext val context: Context
 ) {
     val startMenuIndex: Int
         get() = getString(R.string.pref_key_start_menu, R.string.pref_default_startup).toInt()
@@ -17,14 +20,17 @@ class PreferencesRepository @Inject constructor(
     val isShowPresent: Boolean
         get() = getBoolean(R.string.pref_key_attendance_present, R.bool.pref_default_attendance_present)
 
-    val gradeAverageMode: String
-        get() = getString(R.string.pref_key_grade_average_mode, R.string.pref_default_grade_average_mode)
+    val gradeAverageMode: GradeAverageMode
+        get() = GradeAverageMode.getByValue(getString(R.string.pref_key_grade_average_mode, R.string.pref_default_grade_average_mode))
 
     val gradeAverageForceCalc: Boolean
         get() = getBoolean(R.string.pref_key_grade_average_force_calc, R.bool.pref_default_grade_average_force_calc)
 
     val isGradeExpandable: Boolean
         get() = !getBoolean(R.string.pref_key_expand_grade, R.bool.pref_default_expand_grade)
+
+    val showAllSubjectsOnStatisticsList: Boolean
+        get() = getBoolean(R.string.pref_key_grade_statistics_list, R.bool.pref_default_grade_statistics_list)
 
     val appThemeKey = context.getString(R.string.pref_key_app_theme)
     val appTheme: String
@@ -52,6 +58,10 @@ class PreferencesRepository @Inject constructor(
     val isNotificationsEnable: Boolean
         get() = getBoolean(R.string.pref_key_notifications_enable, R.bool.pref_default_notifications_enable)
 
+    val isUpcomingLessonsNotificationsEnableKey = context.getString(R.string.pref_key_notifications_upcoming_lessons_enable)
+    val isUpcomingLessonsNotificationsEnable: Boolean
+        get() = getBoolean(isUpcomingLessonsNotificationsEnableKey, R.bool.pref_default_notification_upcoming_lessons_enable)
+
     val isDebugNotificationEnableKey = context.getString(R.string.pref_key_notification_debug)
     val isDebugNotificationEnable: Boolean
         get() = getBoolean(isDebugNotificationEnableKey, R.bool.pref_default_notification_debug)
@@ -65,8 +75,24 @@ class PreferencesRepository @Inject constructor(
     val fillMessageContent: Boolean
         get() = getBoolean(R.string.pref_key_fill_message_content, R.bool.pref_default_fill_message_content)
 
+    val showGroupsInPlan: Boolean
+        get() = getBoolean(R.string.pref_key_timetable_show_groups, R.bool.pref_default_timetable_show_groups)
+
     val showWholeClassPlan: String
         get() = getString(R.string.pref_key_timetable_show_whole_class, R.string.pref_default_timetable_show_whole_class)
+
+    val gradeSortingMode: GradeSortingMode
+        get() = GradeSortingMode.getByValue(getString(R.string.pref_key_grade_sorting_mode, R.string.pref_default_grade_sorting_mode))
+
+    val showTimetableTimers: Boolean
+        get() = getBoolean(R.string.pref_key_timetable_show_timers, R.bool.pref_default_timetable_show_timers)
+
+    var isHomeworkFullscreen: Boolean
+        get() = getBoolean(R.string.pref_key_homework_fullscreen, R.bool.pref_default_homework_fullscreen)
+        set(value) = sharedPref.edit().putBoolean("homework_fullscreen", value).apply()
+
+    val showSubjectsWithoutGrades: Boolean
+        get() = getBoolean(R.string.pref_key_subjects_without_grades, R.bool.pref_default_subjects_without_grades)
 
     private fun getString(id: Int, default: Int) = getString(context.getString(id), default)
 

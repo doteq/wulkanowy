@@ -15,6 +15,8 @@ interface MoreView : BaseView {
 
     val mobileDevicesRes: Pair<String, Drawable?>?
 
+    val conferencesRes: Pair<String, Drawable?>?
+
     val schoolAndTeachersRes: Pair<String, Drawable?>?
 
     val settingsRes: Pair<String, Drawable?>?
@@ -23,7 +25,7 @@ interface MoreView : BaseView {
 
     fun initView()
 
-    fun updateData(data: List<MoreItem>)
+    fun updateData(data: List<Pair<String, Drawable?>>)
 
     fun openSettingsView()
 
@@ -40,6 +42,8 @@ interface MoreView : BaseView {
     fun openLuckyNumberView()
 
     fun openMobileDevicesView()
+
+    fun openConferencesView()
 
     fun openSchoolAndTeachersView()
 }

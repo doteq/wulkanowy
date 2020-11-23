@@ -4,8 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import org.threeten.bp.LocalDateTime
 import java.io.Serializable
+import java.time.LocalDateTime
 
 @Entity(tableName = "Students", indices = [Index(value = ["email", "symbol", "student_id", "school_id", "class_id"], unique = true)])
 data class Student(
@@ -43,11 +43,17 @@ data class Student(
     @ColumnInfo(name = "user_login_id")
     val userLoginId: Int,
 
+    @ColumnInfo(name = "user_name")
+    val userName: String,
+
     @ColumnInfo(name = "student_name")
     val studentName: String,
 
     @ColumnInfo(name = "school_id")
     val schoolSymbol: String,
+
+    @ColumnInfo(name ="school_short")
+    val schoolShortName: String,
 
     @ColumnInfo(name = "school_name")
     val schoolName: String,

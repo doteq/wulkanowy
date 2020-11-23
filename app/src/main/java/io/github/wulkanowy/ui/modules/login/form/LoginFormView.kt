@@ -1,6 +1,6 @@
 package io.github.wulkanowy.ui.modules.login.form
 
-import io.github.wulkanowy.data.db.entities.Student
+import io.github.wulkanowy.data.db.entities.StudentWithSemesters
 import io.github.wulkanowy.ui.base.BaseView
 
 interface LoginFormView : BaseView {
@@ -15,23 +15,19 @@ interface LoginFormView : BaseView {
 
     val formHostSymbol: String
 
-    val formSymbolValue: String
-
     val nicknameLabel: String
 
     val emailLabel: String
 
     fun setCredentials(username: String, pass: String)
 
-    fun setSymbol(symbol: String)
-
     fun setUsernameLabel(label: String)
-
-    fun showSymbol(show: Boolean)
 
     fun setErrorUsernameRequired()
 
-    fun setErrorSymbolRequired(focus: Boolean)
+    fun setErrorLoginRequired()
+
+    fun setErrorEmailRequired()
 
     fun setErrorPassRequired(focus: Boolean)
 
@@ -43,8 +39,6 @@ interface LoginFormView : BaseView {
 
     fun clearPassError()
 
-    fun clearSymbolError()
-
     fun showSoftKeyboard()
 
     fun hideSoftKeyboard()
@@ -55,7 +49,7 @@ interface LoginFormView : BaseView {
 
     fun showVersion()
 
-    fun notifyParentAccountLogged(students: List<Student>, loginData: Triple<String, String, String>)
+    fun notifyParentAccountLogged(studentsWithSemesters: List<StudentWithSemesters>, loginData: Triple<String, String, String>)
 
     fun openPrivacyPolicyPage()
 
@@ -63,7 +57,7 @@ interface LoginFormView : BaseView {
 
     fun openFaqPage()
 
-    fun openEmail()
+    fun openEmail(lastError: String)
 
     fun openAdvancedLogin()
 

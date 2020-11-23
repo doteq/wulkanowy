@@ -1,60 +1,59 @@
 package io.github.wulkanowy.data.repositories.gradestatistics
 
+import io.github.wulkanowy.data.db.dao.GradePartialStatisticsDao
 import io.github.wulkanowy.data.db.dao.GradePointsStatisticsDao
-import io.github.wulkanowy.data.db.dao.GradeStatisticsDao
+import io.github.wulkanowy.data.db.dao.GradeSemesterStatisticsDao
+import io.github.wulkanowy.data.db.entities.GradePartialStatistics
 import io.github.wulkanowy.data.db.entities.GradePointsStatistics
-import io.github.wulkanowy.data.db.entities.GradeStatistics
+import io.github.wulkanowy.data.db.entities.GradeSemesterStatistics
 import io.github.wulkanowy.data.db.entities.Semester
-import io.reactivex.Maybe
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class GradeStatisticsLocal @Inject constructor(
-    private val gradeStatisticsDb: GradeStatisticsDao,
-    private val gradePointsStatisticsDb: GradePointsStatisticsDao
+    private val gradePartialStatisticsDb: GradePartialStatisticsDao,
+    private val gradePointsStatisticsDb: GradePointsStatisticsDao,
+    private val gradeSemesterStatisticsDb: GradeSemesterStatisticsDao
 ) {
 
-    fun getGradesStatistics(semester: Semester, isSemester: Boolean): Maybe<List<GradeStatistics>> {
-        return gradeStatisticsDb.loadAll(semester.semesterId, semester.studentId, isSemester).filter { it.isNotEmpty() }
+    // partial
+    fun getGradePartialStatistics(semester: Semester): Flow<List<GradePartialStatistics>> {
+        return gradePartialStatisticsDb.loadAll(semester.semesterId, semester.studentId)
     }
 
-    fun getGradesPointsStatistics(semester: Semester): Maybe<List<GradePointsStatistics>> {
-        return gradePointsStatisticsDb.loadAll(semester.semesterId, semester.studentId).filter { it.isNotEmpty() }
+    suspend fun saveGradePartialStatistics(items: List<GradePartialStatistics>) {
+        gradePartialStatisticsDb.insertAll(items)
     }
 
-    fun getGradesStatistics(semester: Semester, isSemester: Boolean, subjectName: String): Maybe<List<GradeStatistics>> {
-        return when (subjectName) {
-            "Wszystkie" -> gradeStatisticsDb.loadAll(semester.semesterId, semester.studentId, isSemester).map { list ->
-                list.groupBy { it.grade }.map {
-                    GradeStatistics(semester.studentId, semester.semesterId, subjectName, it.key,
-                        it.value.fold(0) { acc, e -> acc + e.amount }, false)
-                } + list
-            }
-            else -> gradeStatisticsDb.loadSubject(semester.semesterId, semester.studentId, subjectName, isSemester)
-        }.filter { it.isNotEmpty() }
+    suspend fun deleteGradePartialStatistics(items: List<GradePartialStatistics>) {
+        gradePartialStatisticsDb.deleteAll(items)
     }
 
-    fun getGradesPointsStatistics(semester: Semester, subjectName: String): Maybe<List<GradePointsStatistics>> {
-        return when (subjectName) {
-            "Wszystkie" -> gradePointsStatisticsDb.loadAll(semester.semesterId, semester.studentId)
-            else -> gradePointsStatisticsDb.loadSubject(semester.semesterId, semester.studentId, subjectName)
-        }.filter { it.isNotEmpty() }
+    // points
+    fun getGradePointsStatistics(semester: Semester): Flow<List<GradePointsStatistics>> {
+        return gradePointsStatisticsDb.loadAll(semester.semesterId, semester.studentId)
     }
 
-    fun saveGradesStatistics(gradesStatistics: List<GradeStatistics>) {
-        gradeStatisticsDb.insertAll(gradesStatistics)
-    }
-
-    fun saveGradesPointsStatistics(gradePointsStatistics: List<GradePointsStatistics>) {
+    suspend fun saveGradePointsStatistics(gradePointsStatistics: List<GradePointsStatistics>) {
         gradePointsStatisticsDb.insertAll(gradePointsStatistics)
     }
 
-    fun deleteGradesStatistics(gradesStatistics: List<GradeStatistics>) {
-        gradeStatisticsDb.deleteAll(gradesStatistics)
+    suspend fun deleteGradePointsStatistics(gradesPointsStatistics: List<GradePointsStatistics>) {
+        gradePointsStatisticsDb.deleteAll(gradesPointsStatistics)
     }
 
-    fun deleteGradesPointsStatistics(gradesPointsStatistics: List<GradePointsStatistics>) {
-        gradePointsStatisticsDb.deleteAll(gradesPointsStatistics)
+    // semester
+    fun getGradeSemesterStatistics(semester: Semester): Flow<List<GradeSemesterStatistics>> {
+        return gradeSemesterStatisticsDb.loadAll(semester.semesterId, semester.studentId)
+    }
+
+    suspend fun saveGradeSemesterStatistics(items: List<GradeSemesterStatistics>) {
+        gradeSemesterStatisticsDb.insertAll(items)
+    }
+
+    suspend fun deleteGradeSemesterStatistics(items: List<GradeSemesterStatistics>) {
+        gradeSemesterStatisticsDb.deleteAll(items)
     }
 }

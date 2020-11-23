@@ -1,20 +1,24 @@
 package io.github.wulkanowy.data.repositories.appcreator
 
 import android.content.res.AssetManager
-import com.google.gson.Gson
-import io.github.wulkanowy.data.pojos.AppCreator
-import io.reactivex.Single
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
+import io.github.wulkanowy.data.pojos.Contributor
+import io.github.wulkanowy.utils.DispatchersProvider
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AppCreatorRepository @Inject constructor(private val assets: AssetManager) {
-    fun getAppCreators(): Single<List<AppCreator>> {
-        return Single.fromCallable<List<AppCreator>> {
-            Gson().fromJson(
-                assets.open("creators.json").bufferedReader().use { it.readText() },
-                Array<AppCreator>::class.java
-            ).toList()
-        }
+class AppCreatorRepository @Inject constructor(
+    private val assets: AssetManager,
+    private val dispatchers: DispatchersProvider
+) {
+
+    suspend fun getAppCreators() = withContext(dispatchers.backgroundThread) {
+        val moshi = Moshi.Builder().build()
+        val type = Types.newParameterizedType(List::class.java, Contributor::class.java)
+        val adapter = moshi.adapter<List<Contributor>>(type)
+        adapter.fromJson(assets.open("contributors.json").bufferedReader().use { it.readText() })
     }
 }

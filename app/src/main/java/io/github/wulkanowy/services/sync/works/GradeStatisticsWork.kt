@@ -3,14 +3,18 @@ package io.github.wulkanowy.services.sync.works
 import io.github.wulkanowy.data.db.entities.Semester
 import io.github.wulkanowy.data.db.entities.Student
 import io.github.wulkanowy.data.repositories.gradestatistics.GradeStatisticsRepository
-import io.reactivex.Completable
+import io.github.wulkanowy.utils.waitForResult
 import javax.inject.Inject
 
-class GradeStatisticsWork @Inject constructor(private val gradeStatisticsRepository: GradeStatisticsRepository) : Work {
+class GradeStatisticsWork @Inject constructor(
+    private val gradeStatisticsRepository: GradeStatisticsRepository
+) : Work {
 
-    override fun create(student: Student, semester: Semester): Completable {
-        return gradeStatisticsRepository.getGradesStatistics(semester, "Wszystkie", false, true)
-            .ignoreElement()
+    override suspend fun doWork(student: Student, semester: Semester) {
+        with(gradeStatisticsRepository) {
+            getGradesPartialStatistics(student, semester, "Wszystkie", forceRefresh = true).waitForResult()
+            getGradesSemesterStatistics(student, semester, "Wszystkie", forceRefresh = true).waitForResult()
+            getGradesPointsStatistics(student, semester, "Wszystkie", forceRefresh = true).waitForResult()
+        }
     }
 }
-

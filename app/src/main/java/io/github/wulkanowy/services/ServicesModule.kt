@@ -1,13 +1,16 @@
 package io.github.wulkanowy.services
 
+import android.app.AlarmManager
 import android.content.Context
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.getSystemService
 import androidx.work.WorkManager
-import com.squareup.inject.assisted.dagger2.AssistedModule
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import dagger.android.ContributesAndroidInjector
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.multibindings.IntoSet
 import io.github.wulkanowy.services.sync.channels.Channel
 import io.github.wulkanowy.services.sync.channels.DebugChannel
@@ -15,12 +18,13 @@ import io.github.wulkanowy.services.sync.channels.LuckyNumberChannel
 import io.github.wulkanowy.services.sync.channels.NewGradesChannel
 import io.github.wulkanowy.services.sync.channels.NewMessagesChannel
 import io.github.wulkanowy.services.sync.channels.NewNotesChannel
+import io.github.wulkanowy.services.sync.channels.PushChannel
+import io.github.wulkanowy.services.sync.channels.UpcomingLessonsChannel
 import io.github.wulkanowy.services.sync.works.AttendanceSummaryWork
 import io.github.wulkanowy.services.sync.works.AttendanceWork
 import io.github.wulkanowy.services.sync.works.CompletedLessonWork
 import io.github.wulkanowy.services.sync.works.ExamWork
 import io.github.wulkanowy.services.sync.works.GradeStatisticsWork
-import io.github.wulkanowy.services.sync.works.GradeSummaryWork
 import io.github.wulkanowy.services.sync.works.GradeWork
 import io.github.wulkanowy.services.sync.works.HomeworkWork
 import io.github.wulkanowy.services.sync.works.LuckyNumberWork
@@ -30,26 +34,26 @@ import io.github.wulkanowy.services.sync.works.RecipientWork
 import io.github.wulkanowy.services.sync.works.TeacherWork
 import io.github.wulkanowy.services.sync.works.TimetableWork
 import io.github.wulkanowy.services.sync.works.Work
-import io.github.wulkanowy.services.widgets.TimetableWidgetService
 import javax.inject.Singleton
 
 @Suppress("unused")
-@AssistedModule
-@Module(includes = [AssistedInject_ServicesModule::class])
+@Module
+@InstallIn(ApplicationComponent::class)
 abstract class ServicesModule {
 
     companion object {
 
         @Provides
-        fun provideWorkManager(context: Context) = WorkManager.getInstance(context)
+        fun provideWorkManager(@ApplicationContext context: Context) = WorkManager.getInstance(context)
 
         @Singleton
         @Provides
-        fun provideNotificationManager(context: Context) = NotificationManagerCompat.from(context)
-    }
+        fun provideNotificationManager(@ApplicationContext context: Context) = NotificationManagerCompat.from(context)
 
-    @ContributesAndroidInjector
-    abstract fun bindTimetableWidgetService(): TimetableWidgetService
+        @Singleton
+        @Provides
+        fun provideAlarmManager(@ApplicationContext context: Context): AlarmManager = context.getSystemService()!!
+    }
 
     @Binds
     @IntoSet
@@ -62,10 +66,6 @@ abstract class ServicesModule {
     @Binds
     @IntoSet
     abstract fun provideAttendanceWork(work: AttendanceWork): Work
-
-    @Binds
-    @IntoSet
-    abstract fun provideGradeSummaryWork(work: GradeSummaryWork): Work
 
     @Binds
     @IntoSet
@@ -126,4 +126,12 @@ abstract class ServicesModule {
     @Binds
     @IntoSet
     abstract fun provideNewNotesChannel(channel: NewNotesChannel): Channel
+
+    @Binds
+    @IntoSet
+    abstract fun providePushChannel(channel: PushChannel): Channel
+
+    @Binds
+    @IntoSet
+    abstract fun provideUpcomingLessonsChannel(channel: UpcomingLessonsChannel): Channel
 }

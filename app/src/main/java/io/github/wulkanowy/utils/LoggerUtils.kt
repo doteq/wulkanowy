@@ -18,36 +18,36 @@ class DebugLogTree : Timber.DebugTree() {
     }
 }
 
-private fun Bundle?.checkSavedState() = if (this == null) "(STATE IS NULL)" else ""
+private fun Bundle?.checkSavedState() = if (this == null) "(STATE IS NULL)" else "(STATE IS NOT NULL)"
 
 class ActivityLifecycleLogger : Application.ActivityLifecycleCallbacks {
 
-    override fun onActivityPaused(activity: Activity?) {
-        activity?.let { Timber.d("${it::class.java.simpleName} PAUSED") }
+    override fun onActivityPaused(activity: Activity) {
+        Timber.d("${activity::class.java.simpleName} PAUSED")
     }
 
-    override fun onActivityResumed(activity: Activity?) {
-        activity?.let { Timber.d("${it::class.java.simpleName} RESUMED") }
+    override fun onActivityResumed(activity: Activity) {
+        Timber.d("${activity::class.java.simpleName} RESUMED")
     }
 
-    override fun onActivityStarted(activity: Activity?) {
-        activity?.let { Timber.d("${it::class.java.simpleName} STARTED") }
+    override fun onActivityStarted(activity: Activity) {
+        Timber.d("${activity::class.java.simpleName} STARTED")
     }
 
-    override fun onActivityDestroyed(activity: Activity?) {
-        activity?.let { Timber.d("${it::class.java.simpleName} DESTROYED") }
+    override fun onActivityDestroyed(activity: Activity) {
+        Timber.d("${activity::class.java.simpleName} DESTROYED")
     }
 
-    override fun onActivitySaveInstanceState(activity: Activity?, outState: Bundle?) {
-        activity?.let { Timber.d("${it::class.java.simpleName} SAVED INSTANCE STATE") }
+    override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
+        Timber.d("${activity::class.java.simpleName} SAVED INSTANCE STATE")
     }
 
-    override fun onActivityStopped(activity: Activity?) {
-        activity?.let { Timber.d("${it::class.java.simpleName} STOPPED") }
+    override fun onActivityStopped(activity: Activity) {
+        Timber.d("${activity::class.java.simpleName} STOPPED")
     }
 
-    override fun onActivityCreated(activity: Activity?, savedInstanceState: Bundle?) {
-        activity?.let { Timber.d("${it::class.java.simpleName} CREATED ${savedInstanceState.checkSavedState()}") }
+    override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+        Timber.d("${activity::class.java.simpleName} CREATED ${savedInstanceState.checkSavedState()}")
     }
 }
 

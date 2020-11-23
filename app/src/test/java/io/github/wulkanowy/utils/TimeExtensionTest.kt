@@ -4,9 +4,9 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import org.threeten.bp.LocalDate.of
-import org.threeten.bp.LocalDateTime
-import org.threeten.bp.Month.JANUARY
+import java.time.LocalDate.of
+import java.time.LocalDateTime
+import java.time.Month.JANUARY
 import java.util.Locale
 
 class TimeExtensionTest {
@@ -38,12 +38,12 @@ class TimeExtensionTest {
     }
 
     @Test
-    fun fridayTest() {
-        assertEquals(of(2018, 10, 5), of(2018, 10, 2).friday)
-        assertEquals(of(2018, 10, 5), of(2018, 10, 5).friday)
-        assertEquals(of(2018, 10, 5), of(2018, 10, 6).friday)
-        assertEquals(of(2018, 10, 5), of(2018, 10, 7).friday)
-        assertEquals(of(2018, 10, 12), of(2018, 10, 8).friday)
+    fun sundayTestTest() {
+        assertEquals(of(2018, 10, 7), of(2018, 10, 2).sunday)
+        assertEquals(of(2018, 10, 7), of(2018, 10, 5).sunday)
+        assertEquals(of(2018, 10, 7), of(2018, 10, 6).sunday)
+        assertEquals(of(2018, 10, 7), of(2018, 10, 7).sunday)
+        assertEquals(of(2018, 10, 14), of(2018, 10, 8).sunday)
     }
 
     @Test
@@ -170,5 +170,43 @@ class TimeExtensionTest {
     fun getCorrectedDate_schoolYear() {
         assertEquals(of(2019, 5, 1), of(2019, 5, 1).getLastSchoolDayIfHoliday(2018))
         assertEquals(of(2018, 5, 1), of(2019, 5, 1).getLastSchoolDayIfHoliday(2017))
+    }
+
+    @Test
+    fun getExamsCutOffDates() {
+        with(of(2020, 9, 13)) {
+            assertEquals(of(2020, 9, 14), startExamsDay)
+            assertEquals(of(2020, 10, 11), endExamsDay)
+        }
+
+        with(of(2020, 9, 14)) {
+            assertEquals(of(2020, 9, 14), startExamsDay)
+            assertEquals(of(2020, 10, 11), endExamsDay)
+        }
+
+        with(of(2020, 9, 15)) {
+            assertEquals(of(2020, 9, 14), startExamsDay)
+            assertEquals(of(2020, 10, 11), endExamsDay)
+        }
+
+        with(of(2020, 9, 16)) {
+            assertEquals(of(2020, 9, 14), startExamsDay)
+            assertEquals(of(2020, 10, 11), endExamsDay)
+        }
+
+        with(of(2020, 9, 17)) {
+            assertEquals(of(2020, 9, 14), startExamsDay)
+            assertEquals(of(2020, 10, 11), endExamsDay)
+        }
+
+        with(of(2020, 9, 18)) {
+            assertEquals(of(2020, 9, 14), startExamsDay)
+            assertEquals(of(2020, 10, 11), endExamsDay)
+        }
+
+        with(of(2020, 9, 19)) {
+            assertEquals(of(2020, 9, 21), startExamsDay)
+            assertEquals(of(2020, 10, 18), endExamsDay)
+        }
     }
 }
