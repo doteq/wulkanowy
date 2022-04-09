@@ -12,7 +12,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="24dp"
+            android:paddingStart="8dp"
             android:paddingEnd="8dp">
 
             <View
@@ -26,7 +26,7 @@
                 android:id="@+id/allDetailsHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="0dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="24dp"
                 android:text="@string/all_details"
@@ -41,7 +41,7 @@
                 android:id="@+id/examDialogSubjectTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="0dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="28dp"
                 android:layout_marginEnd="24dp"
                 android:text="@string/all_subject"
@@ -56,7 +56,7 @@
                 android:id="@+id/examDialogSubjectValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="0dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginEnd="24dp"
                 android:paddingStart="0dp"
                 android:paddingEnd="16dp"
@@ -73,7 +73,7 @@
                 android:id="@+id/examDialogTypeTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="0dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="24dp"
                 android:text="@string/exam_type"
@@ -88,7 +88,7 @@
                 android:id="@+id/examDialogTypeValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="0dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginEnd="24dp"
                 android:paddingStart="0dp"
                 android:paddingEnd="16dp"
@@ -105,7 +105,7 @@
                 android:id="@+id/examDialogTeacherTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="0dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="24dp"
                 android:text="@string/all_teacher"
@@ -120,7 +120,7 @@
                 android:id="@+id/examDialogTeacherValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="0dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginEnd="24dp"
                 android:paddingStart="0dp"
                 android:paddingEnd="16dp"
@@ -134,11 +134,41 @@
                 app:layout_constraintTop_toBottomOf="@id/examDialogTeacherTitle" />
 
             <TextView
-                android:id="@+id/examDialogDateTitle"
+                android:id="@+id/examDialogDeadlineDateTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="24dp"
+            android:text="@string/all_date"
+            android:textColor="?android:textColorSecondary"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/examDialogTeacherValue" />
+
+        <TextView
+            android:id="@+id/examDialogDeadlineDateValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="0dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+            android:layout_marginEnd="24dp"
+            android:paddingStart="0dp"
+                android:paddingEnd="16dp"
+            android:text="@string/all_no_data"
+            android:textIsSelectable="true"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/examDialogDeadlineDateTitle" />
+
+        <TextView
+            android:id="@+id/examDialogEntryDateTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"android:layout_marginTop="16dp"
                 android:layout_marginEnd="24dp"
                 android:text="@string/exam_entry_date"
                 android:textColor="?attr/colorOnSurfaceVariant"
@@ -146,13 +176,13 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/examDialogTeacherValue" />
+                app:layout_constraintTop_toBottomOf="@id/examDialogDeadlineDateValue" />
 
             <TextView
-                android:id="@+id/examDialogDateValue"
+                android:id="@+id/examDialogEntryDateValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="0dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginEnd="24dp"
                 android:paddingStart="0dp"
                 android:paddingEnd="16dp"
@@ -163,13 +193,13 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/examDialogDateTitle" />
+                app:layout_constraintTop_toBottomOf="@id/examDialogEntryDateTitle" />
 
             <TextView
                 android:id="@+id/examDialogDescriptionTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="0dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="24dp"
                 android:text="@string/all_description"
@@ -178,13 +208,13 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/examDialogDateValue" />
+                app:layout_constraintTop_toBottomOf="@id/examDialogEntryDateValue" />
 
             <TextView
                 android:id="@+id/examDialogDescriptionValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="0dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginEnd="24dp"
                 android:paddingStart="0dp"
                 android:paddingEnd="16dp"
@@ -198,6 +228,22 @@
                 app:layout_constraintTop_toBottomOf="@id/examDialogDescriptionTitle" />
 
             <com.google.android.material.button.MaterialButton
+            android:id="@+id/examDialogAddToCalendar"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Dialog.Flush"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_marginBottom="8dp"
+            android:contentDescription="@string/all_add_to_calendar"
+            android:insetLeft="0dp"
+            android:insetTop="0dp"
+            android:insetRight="0dp"
+            android:insetBottom="0dp"
+            android:text="@string/all_add"
+            app:icon="@drawable/ic_calendar_all"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
                 android:id="@+id/examDialogClose"
                 style="@style/Widget.Material3.Button.TextButton.Dialog"
                 android:layout_width="wrap_content"
