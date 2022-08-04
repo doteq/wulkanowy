@@ -10,6 +10,7 @@ import io.github.wulkanowy.R
 import io.github.wulkanowy.data.enums.*
 import io.github.wulkanowy.ui.modules.dashboard.DashboardItem
 import io.github.wulkanowy.ui.modules.grade.GradeAverageMode
+import io.github.wulkanowy.ui.modules.settings.appearance.menuorder.MenuItem
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -316,6 +317,19 @@ class PreferencesRepository @Inject constructor(
             putBoolean(context.getString(R.string.pref_key_ads_enabled), value)
         }
 
+    var menuItemOrder: List<MenuItem>?
+        get() {
+            val value = sharedPref.getString(PREF_KEY_MENU_ITEM_ORDER, null) ?: return null
+
+            return json.decodeFromString(value)
+        }
+        set(value) = sharedPref.edit {
+            putString(
+                PREF_KEY_MENU_ITEM_ORDER,
+                json.encodeToString(value)
+            )
+        }
+
     private fun getLong(id: Int, default: Int) = getLong(context.getString(id), default)
 
     private fun getLong(id: String, default: Int) =
@@ -335,6 +349,8 @@ class PreferencesRepository @Inject constructor(
         sharedPref.getBoolean(context.getString(id), default)
 
     private companion object {
+
+        private const val PREF_KEY_MENU_ITEM_ORDER = "menu_item_order"
 
         private const val PREF_KEY_DASHBOARD_ITEMS_POSITION = "dashboard_items_position"
 

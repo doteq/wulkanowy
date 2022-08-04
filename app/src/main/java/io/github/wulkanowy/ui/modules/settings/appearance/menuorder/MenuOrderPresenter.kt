@@ -1,5 +1,6 @@
 package io.github.wulkanowy.ui.modules.settings.appearance.menuorder
 
+import io.github.wulkanowy.data.repositories.PreferencesRepository
 import io.github.wulkanowy.data.repositories.StudentRepository
 import io.github.wulkanowy.ui.base.BasePresenter
 import io.github.wulkanowy.ui.base.ErrorHandler
@@ -8,7 +9,8 @@ import javax.inject.Inject
 
 class MenuOrderPresenter @Inject constructor(
     studentRepository: StudentRepository,
-    errorHandler: ErrorHandler
+    errorHandler: ErrorHandler,
+    private val preferencesRepository: PreferencesRepository
 ) : BasePresenter<MenuOrderView>(errorHandler, studentRepository) {
 
     override fun onAttachView(view: MenuOrderView) {
@@ -19,13 +21,25 @@ class MenuOrderPresenter @Inject constructor(
     }
 
     private fun loadData() {
-        view?.updateData(
-            listOf(
-                MenuItem.GradeMenuItem(1),
-                MenuItem.StartMenuItem(0),
-                MenuItem.AttendanceMenuItem(2),
-                MenuItem.TimetableMenuItem(3)
-            ).sortedBy { it.order }
+        val defaultMenuItemList = setOf(
+            MenuItem.StartMenuItem(),
+            MenuItem.GradeMenuItem(),
+            MenuItem.TimetableMenuItem(),
+            MenuItem.AttendanceMenuItem(),
+            MenuItem.ExamsMenuItem(),
+            MenuItem.HomeworkMenuItem(),
+            MenuItem.NoteMenuItem(),
+            MenuItem.LuckyNumberMenuItem(),
+            MenuItem.SchoolAnnouncementsMenuItem(),
+            MenuItem.SchoolAndTeachersMenuItem(),
+            MenuItem.MobileDevicesMenuItem(),
+            MenuItem.ConferenceMenuItem(),
+            MenuItem.MessageMenuItem()
         )
+
+        val savedMenuItemList = (preferencesRepository.menuItemOrder ?: defaultMenuItemList)
+            .sortedBy { it.order }
+
+        view?.updateData(savedMenuItemList)
     }
 }
