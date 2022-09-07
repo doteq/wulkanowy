@@ -316,6 +316,9 @@ class PreferencesRepository @Inject constructor(
             putBoolean(context.getString(R.string.pref_key_ads_enabled), value)
         }
 
+    val isIncognitoMode: Boolean
+        get() = getBoolean(R.string.pref_key_incognito_moge, R.bool.pref_default_incognito_mode)
+
     private fun getLong(id: Int, default: Int) = getLong(context.getString(id), default)
 
     private fun getLong(id: String, default: Int) =
