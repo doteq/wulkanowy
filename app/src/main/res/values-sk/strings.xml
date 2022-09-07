@@ -55,7 +55,7 @@
     <string name="login_invalid_symbol">Neplatný symbol</string>
     <string name="login_incorrect_symbol">Žiak nebol nájdený. Skontrolujte správnosť symbolu a vybrané varianty denníka UONET+</string>
     <string name="login_duplicate_student">Vybraný žiak už je prihlásený</string>
-    <string name="login_symbol_helper">Symbol nájdete na stránke denníka v &#160;<b>Uczeń</b>→&#160;<b>Dostęp Mobilny</b> →&#160;<b>Zarejestruj urządzenie mobilne</b>.\n\nUistite sa, že ste na predchádzajúcu obrazovke nastaviť správny variant denníka do poľa <b>Variácie denníka UONET+</b>. Wulkanowy v túto chvíľu nezistí predškolské żaków</string>
+    <string name="login_symbol_helper">Symbol nájdete na stránke denníka v &#160;<b>Uczeń</b>→&#160;<b>Dostęp Mobilny</b> →&#160;<b>Zarejestruj urządzenie mobilne</b>.\n\nUistite sa, že ste na predchádzajúcu obrazovke nastaviť správny variant denníka do poľa <b>Variácie denníka UONET+</b></string>
     <string name="login_select_student">Vyberte žiakov, ktorí sa majú do aplikácie prihlásiť</string>
     <string name="login_advanced">Iné možnosti</string>
     <string name="login_advanced_warning_mobile_api">V tomto režime nefungujú nasledovné: šťastné číslo, štatistiky triedy, zhrnutie frekvencií, ospravedlnenie neprítomnosti, dokončené lekcie, informácie o škole a prezeranie zoznamu registrovaných zariadení</string>
@@ -71,11 +71,15 @@
     <string name="login_recover_title">Obnovte svoj účet</string>
     <string name="login_recover">Obnoviť</string>
     <string name="login_signed_in">Žiak je už prihlásený</string>
+    <string name="login_host_standard">Štandardná</string>
     <!--Main-->
     <string name="main_account_picker">Manažér účtov</string>
     <string name="main_log_in">Prihlásiť sa</string>
     <string name="main_session_expired">Relácia vypršala</string>
     <string name="main_session_relogin">Relácia vypršala. Prihláste sa prosím znovu</string>
+    <string name="main_support_title">Podpora aplikácie</string>
+    <string name="main_support_description">Páči sa Vám táto aplikácia? Podporte jej vývoj tým, že povolíte neinvazívne reklamy, ktoré môžete kedykoľvek vypnúť</string>
+    <string name="main_support_positive">Zapnúť reklamy</string>
     <!--Grade-->
     <string name="grade_header">Známka</string>
     <string name="grade_semester">Semester %d</string>
@@ -93,7 +97,7 @@
     <string name="grade_summary_predicted_grade">Predpokladaná známka</string>
     <string name="grade_summary_calculated_average">Vypočítaný priemer</string>
     <string name="grade_summary_calculated_average_help_dialog_title">Ako funguje vypočítaný priemer?</string>
-    <string name="grade_summary_calculated_average_help_dialog_message">Vypočítaný priemer je aritmetický priemer vypočítaný z priemerov predmetov. Umožňuje vám to poznať približný konečný priemer. Vypočítava sa spôsobom zvoleným užívateľom v nastaveniach aplikácii. Odporúča sa vybrať príslušnú možnosť. Dôvodom je rozdielny výpočet školských priemerov. Ak vaša škola navyše uvádza priemer predmetov na stránke denníka Vulcan, aplikácia si ich stiahne a tieto priemery nepočíta. To možno zmeniť vynútením výpočtu priemeru v nastavení aplikácii.\n\n<b>Priemer známok iba z vybraného semestra</b>:\n1. Výpočet váženého priemeru pre každý predmet v danom semestri\n2. Sčítanie vypočítaných priemerov\n3. Výpočet aritmetického priemeru součtených priemerov\n\n<b>Priemer priemerov z oboch semestrov</b>:\n1. Výpočet váženého priemeru pre každý predmet v semestri 1 a 2\n2. Výpočet aritmetického priemeru vypočítaných priemerov za semestre 1 a 2 pre každý predmet.\n3. Sčítanie vypočítaných priemerov\n4. Výpočet aritmetického priemeru součtených priemerov\n\n<b>Priemer známok z celého roka:</b>\n1. Výpočet váženého priemeru za rok pre každý predmet. Konečný priemer v 1. semestri je nepodstatný.\n3. Sčítanie vypočítaných priemerov\n4. Výpočet aritmetického priemeru součtených priemerov</string>
+    <string name="grade_summary_calculated_average_help_dialog_message">Vypočítaný priemer je aritmetický priemer vypočítaný z priemerov predmetov. Umožňuje vám to poznať približný konečný priemer. Vypočítava sa spôsobom zvoleným užívateľom v nastaveniach aplikácii. Odporúča sa vybrať príslušnú možnosť. Dôvodom je rozdielny výpočet školských priemerov. Ak vaša škola navyše uvádza priemer predmetov na stránke denníka Vulcan, aplikácia si ich stiahne a tieto priemery nepočíta. To možno zmeniť vynútením výpočtu priemeru v nastavení aplikácii.\n\n<b>Priemer známok iba z vybraného semestra</b>:\n1. Výpočet váženého priemeru pre každý predmet v danom semestri\n2. Sčítanie vypočítaných priemerov\n3. Výpočet aritmetického priemeru součtených priemerov\n\n<b>Priemer priemerov z oboch semestrov</b>:\n1. Výpočet váženého priemeru pre každý predmet v semestri 1 a 2\n2. Výpočet aritmetického priemeru vypočítaných priemerov za semestre 1 a 2 pre každý predmet.\n3. Sčítanie vypočítaných priemerov\n4. Výpočet aritmetického priemeru součtených priemerov\n\n<b>Priemer známok z celého roka:</b>\n1. Výpočet váženého priemeru za rok pre každý predmet. Konečný priemer v 1. semestri je nepodstatný.\n2. Sčítanie vypočítaných priemerov\n3. Výpočet aritmetického priemeru součtených priemerov</string>
     <string name="grade_summary_final_average_help_dialog_title">Ako funguje konečný priemer?</string>
     <string name="grade_summary_final_average_help_dialog_message">Konečný priemer je aritmetický priemer vypočítaný zo všetkých aktuálne dostupných konečných známok v danom semestri.\n\nSchéma výpočtu sa skladá z nasledujúcich krokov:\n1. Sčítanie konečných známok zadaných učiteľmi\n2. Delené počtom predmetov, pre ktoré už boli vydané známky</string>
     <string name="grade_summary_final_average">Konečný priemer</string>
@@ -105,9 +109,11 @@
     <string name="grade_statistics_semester">Semester</string>
     <string name="grade_statistics_points">Body</string>
     <string name="grade_statistics_legend">Vysvetlivky</string>
-    <string name="grade_statistics_average">Priemer: %1$s</string>
+    <string name="grade_statistics_class_average">Priemer triedy: %1$s</string>
+    <string name="grade_statistics_student_average">Váš priemer: %1$s</string>
+    <string name="grade_statistics_student_grade">Vaša známka: %1$s</string>
     <string name="grade_statistics_average_class">Trieda</string>
-    <string name="grade_statistics_average_student">Žiák</string>
+    <string name="grade_statistics_average_student">Žiak</string>
     <plurals name="grade_number_item">
         <item quantity="one">%d známka</item>
         <item quantity="few">%d známky</item>
@@ -283,13 +289,18 @@
     <string name="message_no_items">Žiadne správy</string>
     <string name="message_from">Od:</string>
     <string name="message_to">Komu:</string>
-    <string name="message_date">Dátum: %s</string>
+    <string name="message_date">Dátum: %1$s</string>
     <string name="message_reply">Odpoveď</string>
     <string name="message_forward">Poslať ďalej</string>
-    <string name="message_delete">Odstrániť</string>
-    <string name="message_move_to_bin">Presunúť do koša</string>
+    <string name="message_select_all">Vybrať všetko</string>
+    <string name="message_unselect_all">Odznačiť všetko</string>
+    <string name="message_move_to_trash">Presunúť do koša</string>
     <string name="message_delete_forever">Odstrániť natrvalo</string>
     <string name="message_delete_success">Správa bola úspešne odstránená</string>
+    <string name="message_mailbox_type_student">žiak</string>
+    <string name="message_mailbox_type_parent">rodič</string>
+    <string name="message_mailbox_type_guardian">opatrovník</string>
+    <string name="message_mailbox_type_employee">pracovník</string>
     <string name="message_share">Zdieľať</string>
     <string name="message_print">Vytlačiť</string>
     <string name="message_subject">Predmet</string>
@@ -301,12 +312,11 @@
     <string name="message_chip_only_unread">Iba neprečítané</string>
     <string name="message_chip_only_with_attachments">Iba s prílohami</string>
     <string name="message_read">Prečítaná: %s</string>
-    <string name="message_read_by">Prečítaná cez: %1$d z %2$d osôb</string>
     <plurals name="message_number_item">
-        <item quantity="one">%d správa</item>
-        <item quantity="few">%d správy</item>
-        <item quantity="many">%d správ</item>
-        <item quantity="other">%d správ</item>
+        <item quantity="one">%1$d správa</item>
+        <item quantity="few">%1$d správy</item>
+        <item quantity="many">%1$d správ</item>
+        <item quantity="other">%1$d správ</item>
     </plurals>
     <plurals name="message_new_items">
         <item quantity="one">Nová správa</item>
@@ -322,6 +332,13 @@
         <item quantity="many">Máte %1$d nových správ</item>
         <item quantity="other">Máte %1$d nových správ</item>
     </plurals>
+    <plurals name="message_selected_messages_count">
+        <item quantity="one">%1$d vybraná</item>
+        <item quantity="few">%1$d vybrané</item>
+        <item quantity="many">%1$d vybraných</item>
+        <item quantity="other">%1$d vybraných</item>
+    </plurals>
+    <string name="message_messages_deleted">Správy odstránené</string>
     <!--Note-->
     <string name="note_no_items">Žiadne informácie o poznámkach</string>
     <string name="note_points">Body</string>
@@ -383,8 +400,8 @@
     </plurals>
     <!--Homework-->
     <string name="homework_no_items">Žiadne informácie o domácich úlohách</string>
-    <string name="homework_mark_as_done">Označiť ako hotové</string>
-    <string name="homework_mark_as_undone">Nevyrobené</string>
+    <string name="homework_mark_as_done">Vykonané</string>
+    <string name="homework_mark_as_undone">Nevykonané</string>
     <string name="homework_add">Pridať domácu úlohu</string>
     <string name="homework_add_success">Domáca úloha bola úspešně pridaná</string>
     <string name="homework_delete_success">Domáca úloha bola úspešně odstránená</string>
@@ -647,6 +664,7 @@
     <string name="all_copied">Skopírované</string>
     <string name="all_undo">Vrátiť</string>
     <string name="all_change">Zmeniť</string>
+    <string name="all_add_to_calendar">Pridať do kalendára</string>
     <!--Timetable Widget-->
     <string name="widget_timetable_no_items">Žiadne lekcie</string>
     <string name="widget_timetable_theme_title">Vybrať motív</string>
@@ -702,6 +720,10 @@
     <string name="pref_other_fill_message_content">Odpovedať s históriou správ</string>
     <string name="pref_other_optional_arithmetic_average">Vypočítať aritmetický priemer, ak žiadna známka nemá váhu</string>
     <string name="pref_ads_support_category_name">Podpora</string>
+    <string name="pref_ads_privacy_policy">Ochrana osobných údajov</string>
+    <string name="pref_ads_agreements">Súhlasy</string>
+    <string name="pref_ads_consent">Súhlas so spracovaním údajov súvisiacich s reklamami</string>
+    <string name="pref_ads_show_in_app">Zobraziť reklamy v aplikácii</string>
     <string name="pref_ads_support">Pozrite sa na jednu reklamu pre podporu projektu</string>
     <string name="pref_ads_privacy_title">Súhlas so spracovaním dát</string>
     <string name="pref_ads_privacy_description">Ak chcete sledovať reklamu, musíte súhlasiť s podmienkami spracovania údajov v našich Zásadách Ochrany Osobných Údajov</string>
@@ -709,6 +731,13 @@
     <string name="pref_ads_privacy_link">Ochrana osobných údajov</string>
     <string name="pref_ads_loading">Reklama sa načítava</string>
     <string name="pref_ads_once_per_visit">Ďakujeme za vašu podporu, vráťte sa neskôr pre viac reklám</string>
+    <string name="pref_ads_consent_title">Môžeme použiť Vaše údaje na zobrazenie reklám?</string>
+    <string name="pref_ads_consent_description">Voľbu môžete kedykoľvek zmeniť v nastavení aplikácie. Môžeme použiť vaše údaje na zobrazenie reklám šitých pre vás alebo pomocou menej vašich dát zobrazovať neprispôsobené reklamy. Podrobnosti nájdete v našich Zásadách ochrany osobných údajov</string>
+    <string name="pref_ads_summary_personalized">Prispôsobené reklamy</string>
+    <string name="pref_ads_summary_non_personalized">Neprispôsobené reklamy</string>
+    <string name="pref_ads_over_18_years_old">Mám ukončené 18 rokov</string>
+    <string name="pref_ads_option_personalized">Áno, prispôsobené reklamy</string>
+    <string name="pref_ads_option_non_personalized">Áno, neprispôsobené reklamy</string>
     <string name="pref_settings_advanced_title">Pokročilé</string>
     <string name="pref_settings_appearance_title">Vzhľad a správanie</string>
     <string name="pref_settings_notifications_title">Oznámenia</string>
@@ -760,6 +789,7 @@
     <string name="update_failed">Aktualizácia zlyhala! Wulkanowy nemusí fungovať správne. Zvážte aktualizáciu</string>
     <!--Errors-->
     <string name="error_no_internet">Žiadne internetové pripojenie</string>
+    <string name="error_invalid_device_datetime">Vyskytla sa chyba. Skontrolujte hodiny svojho zariadenia</string>
     <string name="error_timeout">Nedá sa pripojiť ku denníku. Servery môžu byť preťažené. Prosím skúste to znova neskôr</string>
     <string name="error_login_failed">Načítanie údajov zlyhalo. Skúste neskôr prosím</string>
     <string name="error_password_change_required">Je vyžadovaná zmena hesla pre denník</string>

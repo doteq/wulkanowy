@@ -1,7 +1,7 @@
 package io.github.wulkanowy.ui.modules.attendance
 
 import android.annotation.SuppressLint
-import io.github.wulkanowy.data.Status
+import io.github.wulkanowy.data.*
 import io.github.wulkanowy.data.db.entities.Attendance
 import io.github.wulkanowy.data.repositories.AttendanceRepository
 import io.github.wulkanowy.data.repositories.PreferencesRepository
@@ -93,15 +93,19 @@ class AttendancePresenter @Inject constructor(
 
     fun onViewReselected() {
         Timber.i("Attendance view is reselected")
-        view?.also { view ->
+        view?.let { view ->
             if (view.currentStackSize == 1) {
-                baseDate.also {
-                    if (currentDate != it) {
-                        reloadView(it)
-                        loadData()
-                    } else if (!view.isViewEmpty) view.resetView()
+                baseDate = now().previousOrSameSchoolDay
+
+                if (currentDate != baseDate) {
+                    reloadView(baseDate)
+                    loadData()
+                } else if (!view.isViewEmpty) {
+                    view.resetView()
                 }
-            } else view.popView()
+            } else {
+                view.popView()
+            }
         }
     }
 
@@ -203,93 +207,77 @@ class AttendancePresenter @Inject constructor(
 
         var isParent = false
 
-        flowWithResourceIn {
+        flatResourceFlow {
             val student = studentRepository.getCurrentStudent()
             isParent = student.isParent
 
             val semester = semesterRepository.getCurrentSemester(student)
             attendanceRepository.getAttendance(
-                student,
-                semester,
-                currentDate,
-                currentDate,
-                forceRefresh
+                student = student,
+                semester = semester,
+                start = currentDate,
+                end = currentDate,
+                forceRefresh = forceRefresh
             )
-        }.onEach {
-            when (it.status) {
-                Status.LOADING -> {
-                    view?.showExcuseButton(false)
-                    if (!it.data.isNullOrEmpty()) {
-                        val filteredAttendance = if (prefRepository.isShowPresent) {
-                            it.data
-                        } else {
-                            it.data.filter { item -> !item.presence }
-                        }
-
-                        view?.run {
-                            enableSwipe(true)
-                            showRefresh(true)
-                            showProgress(false)
-                            showErrorView(false)
-                            showEmpty(filteredAttendance.isEmpty())
-                            showContent(filteredAttendance.isNotEmpty())
-                            updateData(filteredAttendance.sortedBy { item -> item.number })
-                        }
-                    }
-                }
-                Status.SUCCESS -> {
-                    Timber.i("Loading attendance result: Success")
-                    val filteredAttendance = if (prefRepository.isShowPresent) {
-                        it.data.orEmpty()
-                    } else {
-                        it.data?.filter { item -> !item.presence }.orEmpty()
-                    }
-
-                    isVulcanExcusedFunctionEnabled =
-                        filteredAttendance.any { item -> item.excusable }
-
-                    view?.apply {
-                        updateData(filteredAttendance.sortedBy { item -> item.number })
-                        showEmpty(filteredAttendance.isEmpty())
-                        showErrorView(false)
-                        showContent(filteredAttendance.isNotEmpty())
-                        val anyExcusables = filteredAttendance.any { it.isExcusableOrNotExcused }
-                        showExcuseButton(anyExcusables && (isParent || isVulcanExcusedFunctionEnabled))
-                    }
-                    analytics.logEvent(
-                        "load_data",
-                        "type" to "attendance",
-                        "items" to it.data!!.size
-                    )
-                }
-                Status.ERROR -> {
-                    Timber.i("Loading attendance result: An exception occurred")
-                    errorHandler.dispatch(it.error!!)
+        }
+            .logResourceStatus("load attendance")
+            .onResourceLoading {
+                view?.showExcuseButton(false)
+            }
+            .mapResourceData {
+                if (prefRepository.isShowPresent) {
+                    it
+                } else {
+                    it.filter { item -> !item.presence }
+                }.sortedBy { item -> item.number }
+            }
+            .onResourceData {
+                view?.run {
+                    enableSwipe(true)
+                    showProgress(false)
+                    showErrorView(false)
+                    showEmpty(it.isEmpty())
+                    showContent(it.isNotEmpty())
+                    updateData(it)
                 }
             }
-        }.afterLoading {
-            view?.run {
-                showRefresh(false)
-                showProgress(false)
-                enableSwipe(true)
+            .onResourceIntermediate { view?.showRefresh(true) }
+            .onResourceSuccess {
+                isVulcanExcusedFunctionEnabled = it.any { item -> item.excusable }
+                val anyExcusables = it.any { it.isExcusableOrNotExcused }
+                view?.showExcuseButton(anyExcusables && (isParent || isVulcanExcusedFunctionEnabled))
+
+                analytics.logEvent(
+                    "load_data",
+                    "type" to "attendance",
+                    "items" to it.size
+                )
             }
-        }.launch()
+            .onResourceNotLoading {
+                view?.run {
+                    showRefresh(false)
+                    showProgress(false)
+                    enableSwipe(true)
+                }
+            }
+            .onResourceError(errorHandler::dispatch)
+            .launch()
     }
 
     private fun excuseAbsence(reason: String?, toExcuseList: List<Attendance>) {
-        flowWithResource {
+        resourceFlow {
             val student = studentRepository.getCurrentStudent()
             val semester = semesterRepository.getCurrentSemester(student)
             attendanceRepository.excuseForAbsence(student, semester, toExcuseList, reason)
         }.onEach {
-            when (it.status) {
-                Status.LOADING -> view?.run {
+            when (it) {
+                is Resource.Loading -> view?.run {
                     Timber.i("Excusing absence started")
                     showProgress(true)
                     showContent(false)
                     showExcuseButton(false)
                 }
-                Status.SUCCESS -> {
+                is Resource.Success -> {
                     Timber.i("Excusing for absence result: Success")
                     analytics.logEvent("excuse_absence", "items" to attendanceToExcuseList.size)
                     attendanceToExcuseList.clear()
@@ -301,9 +289,9 @@ class AttendancePresenter @Inject constructor(
                     }
                     loadData(forceRefresh = true)
                 }
-                Status.ERROR -> {
+                is Resource.Error -> {
                     Timber.i("Excusing for absence result: An exception occurred")
-                    errorHandler.dispatch(it.error!!)
+                    errorHandler.dispatch(it.error)
                     loadData()
                 }
             }

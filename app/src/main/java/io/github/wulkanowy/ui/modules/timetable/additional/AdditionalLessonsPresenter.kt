@@ -1,7 +1,7 @@
 package io.github.wulkanowy.ui.modules.timetable.additional
 
 import android.annotation.SuppressLint
-import io.github.wulkanowy.data.Status
+import io.github.wulkanowy.data.*
 import io.github.wulkanowy.data.db.entities.TimetableAdditional
 import io.github.wulkanowy.data.repositories.PreferencesRepository
 import io.github.wulkanowy.data.repositories.SemesterRepository
@@ -40,20 +40,25 @@ class AdditionalLessonsPresenter @Inject constructor(
         Timber.i("Additional lessons was initialized")
         errorHandler.showErrorMessage = ::showErrorViewOnError
         val dateToReload = LocalDate.ofEpochDay(date ?: baseDate.toEpochDay())
-        if (dateToReload.lengthOfMonth() > 4) reloadView(baseDate)
-        else reloadView(dateToReload)
-        loadData()
+        if (dateToReload.lengthOfMonth() > 4) {
+            loadData(baseDate)
+            reloadView(baseDate)
+        } else {
+            loadData(dateToReload)
+            reloadView(dateToReload)
+        }
         if (preferencesRepository.previewText.isNotBlank()) setLastSemesterDay()
+        else if (currentDate.isHolidays) setBaseDateOnHolidays()
     }
 
     fun onPreviousDay() {
+        loadData(currentDate.previousSchoolDay)
         reloadView(currentDate.previousSchoolDay)
-        loadData()
     }
 
     fun onNextDay() {
+        loadData(currentDate.nextSchoolDay)
         reloadView(currentDate.nextSchoolDay)
-        loadData()
     }
 
     fun onPickDate() {
@@ -65,13 +70,13 @@ class AdditionalLessonsPresenter @Inject constructor(
     }
 
     fun onDateSet(year: Int, month: Int, day: Int) {
+        loadData(LocalDate.of(year, month, day))
         reloadView(LocalDate.of(year, month, day))
-        loadData()
     }
 
     fun onSwipeRefresh() {
         Timber.i("Force refreshing the additional lessons")
-        loadData(true)
+        loadData(currentDate, true)
     }
 
     fun onRetry() {
@@ -79,11 +84,24 @@ class AdditionalLessonsPresenter @Inject constructor(
             showErrorView(false)
             showProgress(true)
         }
-        loadData(true)
+        loadData(currentDate, true)
     }
 
     fun onDetailsClick() {
         view?.showErrorDetailsDialog(lastError)
+    }
+
+    private fun setBaseDateOnHolidays() {
+        flow {
+            val student = studentRepository.getCurrentStudent()
+            emit(semesterRepository.getCurrentSemester(student))
+        }.catch {
+            Timber.i("Loading semester result: An exception occurred")
+        }.onEach {
+            baseDate = baseDate.getLastSchoolDayIfHoliday(it.schoolYear)
+            currentDate = baseDate
+            reloadNavigation()
+        }.launch("holidays")
     }
 
     private fun setLastSemesterDay() {
@@ -128,47 +146,47 @@ class AdditionalLessonsPresenter @Inject constructor(
         }
     }
 
-    private fun loadData(forceRefresh: Boolean = false) {
-        flowWithResourceIn {
+    private fun loadData(date: LocalDate, forceRefresh: Boolean = false) {
+        currentDate = date
+
+        flatResourceFlow {
             val student = studentRepository.getCurrentStudent()
             val semester = semesterRepository.getCurrentSemester(student)
             timetableRepository.getTimetable(
                 student = student,
                 semester = semester,
-                start = currentDate,
-                end = currentDate,
+                start = date,
+                end = date,
                 forceRefresh = forceRefresh,
                 refreshAdditional = true,
+                timetableType = TimetableRepository.TimetableType.ADDITIONAL
             )
-        }.onEach {
-            when (it.status) {
-                Status.LOADING -> Timber.i("Loading additional lessons data started")
-                Status.SUCCESS -> {
-                    Timber.i("Loading additional lessons lessons result: Success")
-                    view?.apply {
-                        updateData(it.data!!.additional.sortedBy { item -> item.start })
-                        showEmpty(it.data.additional.isEmpty())
-                        showErrorView(false)
-                        showContent(it.data.additional.isNotEmpty())
-                    }
-                    analytics.logEvent(
-                        "load_data",
-                        "type" to "additional_lessons",
-                        "items" to it.data!!.additional.size
-                    )
-                }
-                Status.ERROR -> {
-                    Timber.i("Loading additional lessons result: An exception occurred")
-                    errorHandler.dispatch(it.error!!)
+        }
+            .logResourceStatus("load additional lessons")
+            .onResourceData {
+                view?.apply {
+                    updateData(it.additional.sortedBy { item -> item.start })
+                    showEmpty(it.additional.isEmpty())
+                    showErrorView(false)
+                    showContent(it.additional.isNotEmpty())
                 }
             }
-        }.afterLoading {
-            view?.run {
-                hideRefresh()
-                showProgress(false)
-                enableSwipe(true)
+            .onResourceSuccess {
+                analytics.logEvent(
+                    "load_data",
+                    "type" to "additional_lessons",
+                    "items" to it.additional.size
+                )
             }
-        }.launch()
+            .onResourceNotLoading {
+                view?.run {
+                    hideRefresh()
+                    showProgress(false)
+                    enableSwipe(true)
+                }
+            }
+            .onResourceError(errorHandler::dispatch)
+            .launch()
     }
 
     private fun showErrorViewOnError(message: String, error: Throwable) {

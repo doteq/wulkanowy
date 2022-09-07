@@ -1,6 +1,7 @@
-Wersja 1.4.4
+Wersja 1.7.5
 
-- naprawiliśmy logowanie do Gdańskiej Platformy Edukacyjnej
-- naprawiliśmy sortowanie ocen oraz ogłoszeń
+- naprawiliśmy kilka błędów w obsłudze nowego modułu wiadomości
+- naprawiliśmy wyświetlanie napisu "Brak ocen", jesli uczeń nie zdobył w danym semestrze jeszcze żadnych ocen
+- naprawiliśmy logowanie do aplikacji rodzicom będącym jednocześnie nauczycielami
 
 Pełna lista zmian: https://github.com/wulkanowy/wulkanowy/releases

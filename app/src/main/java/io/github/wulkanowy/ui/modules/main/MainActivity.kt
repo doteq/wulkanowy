@@ -17,6 +17,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.ncapdevi.fragnav.FragNavController
 import com.ncapdevi.fragnav.FragNavController.Companion.HIDE
@@ -25,19 +26,13 @@ import io.github.wulkanowy.R
 import io.github.wulkanowy.data.db.entities.Student
 import io.github.wulkanowy.data.db.entities.StudentWithSemesters
 import io.github.wulkanowy.databinding.ActivityMainBinding
+import io.github.wulkanowy.databinding.DialogAdsConsentBinding
 import io.github.wulkanowy.ui.base.BaseActivity
 import io.github.wulkanowy.ui.modules.Destination
 import io.github.wulkanowy.ui.modules.account.accountquick.AccountQuickDialog
-import io.github.wulkanowy.utils.AnalyticsHelper
-import io.github.wulkanowy.utils.AppInfo
-import io.github.wulkanowy.utils.InAppReviewHelper
-import io.github.wulkanowy.utils.UpdateHelper
-import io.github.wulkanowy.utils.createNameInitialsDrawable
-import io.github.wulkanowy.utils.dpToPx
-import io.github.wulkanowy.utils.getThemeAttrColor
-import io.github.wulkanowy.utils.nickOrName
-import io.github.wulkanowy.utils.safelyPopFragments
-import io.github.wulkanowy.utils.setOnViewChangeListener
+import io.github.wulkanowy.utils.*
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -69,13 +64,13 @@ class MainActivity : BaseActivity<MainPresenter, ActivityMainBinding>(), MainVie
 
     companion object {
 
-        private const val EXTRA_START_DESTINATION = "start_destination"
+        private const val EXTRA_START_DESTINATION = "start_destination_json"
 
         fun getStartIntent(
             context: Context,
             destination: Destination? = null,
         ) = Intent(context, MainActivity::class.java).apply {
-            putExtra(EXTRA_START_DESTINATION, destination)
+            destination?.let { putExtra(EXTRA_START_DESTINATION, Json.encodeToString(it)) }
         }
     }
 
@@ -84,9 +79,8 @@ class MainActivity : BaseActivity<MainPresenter, ActivityMainBinding>(), MainVie
     override val currentStackSize get() = navController.currentStack?.size
 
     override val currentViewTitle
-        get() = (navController.currentFrag as? MainView.TitledView)?.titleStringId?.let {
-            getString(it)
-        }
+        get() = (navController.currentFrag as? MainView.TitledView)?.titleStringId
+            ?.let { getString(it) }
 
     override val currentViewSubtitle get() = (navController.currentFrag as? MainView.TitledView)?.subtitleString
 
@@ -100,7 +94,7 @@ class MainActivity : BaseActivity<MainPresenter, ActivityMainBinding>(), MainVie
         messageContainer = binding.mainMessageContainer
         updateHelper.messageContainer = binding.mainFragmentContainer
 
-        val destination = (intent.getSerializableExtra(EXTRA_START_DESTINATION) as Destination?)
+        val destination = intent.getStringExtra(EXTRA_START_DESTINATION)
             ?.takeIf { savedInstanceState == null }
 
         presenter.onAttachView(this, destination)
@@ -113,6 +107,7 @@ class MainActivity : BaseActivity<MainPresenter, ActivityMainBinding>(), MainVie
     }
 
     //https://developer.android.com/guide/playcore/in-app-updates#status_callback
+    @Deprecated("Deprecated in Java")
     @Suppress("DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -143,7 +138,7 @@ class MainActivity : BaseActivity<MainPresenter, ActivityMainBinding>(), MainVie
                 )
             }
             fragmentHideStrategy = HIDE
-            rootFragments = rootDestinations.map { it.fragment }
+            rootFragments = rootDestinations.map { it.destinationFragment }
 
             initialize(startMenuIndex, savedInstanceState)
         }
@@ -174,8 +169,12 @@ class MainActivity : BaseActivity<MainPresenter, ActivityMainBinding>(), MainVie
                     .setIcon(R.drawable.ic_main_more)
             }
             selectedItemId = startMenuIndex
-            setOnItemSelectedListener { presenter.onTabSelected(it.itemId, false) }
-            setOnItemReselectedListener { presenter.onTabSelected(it.itemId, true) }
+            setOnItemSelectedListener {
+                this@MainActivity.presenter.onTabSelected(it.itemId, false)
+            }
+            setOnItemReselectedListener {
+                this@MainActivity.presenter.onTabSelected(it.itemId, true)
+            }
         }
     }
 
@@ -183,8 +182,10 @@ class MainActivity : BaseActivity<MainPresenter, ActivityMainBinding>(), MainVie
         caller: PreferenceFragmentCompat,
         pref: Preference
     ): Boolean {
-        val fragment =
-            supportFragmentManager.fragmentFactory.instantiate(classLoader, pref.fragment)
+        val fragment = supportFragmentManager.fragmentFactory.instantiate(
+            classLoader,
+            pref.fragment.toString()
+        )
         pushView(fragment)
         return true
     }
@@ -263,7 +264,7 @@ class MainActivity : BaseActivity<MainPresenter, ActivityMainBinding>(), MainVie
     }
 
     override fun openMoreDestination(destination: Destination) {
-        pushView(destination.fragment)
+        pushView(destination.destinationFragment)
     }
 
     override fun notifyMenuViewReselected() {
@@ -317,6 +318,50 @@ class MainActivity : BaseActivity<MainPresenter, ActivityMainBinding>(), MainVie
 
     override fun showInAppReview() {
         inAppReviewHelper.showInAppReview(this)
+    }
+
+    override fun showAppSupport() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.main_support_title)
+            .setMessage(R.string.main_support_description)
+            .setPositiveButton(R.string.main_support_positive) { _, _ -> presenter.onEnableAdsSelected() }
+            .setNegativeButton(android.R.string.cancel) { _, _ -> }
+            .setOnDismissListener { }
+            .show()
+    }
+
+    override fun showPrivacyPolicyDialog() {
+        val dialogAdsConsentBinding = DialogAdsConsentBinding.inflate(layoutInflater)
+
+        val dialog = MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.pref_ads_consent_title)
+            .setMessage(R.string.pref_ads_consent_description)
+            .setView(dialogAdsConsentBinding.root)
+            .show()
+
+        dialogAdsConsentBinding.adsConsentOver.setOnCheckedChangeListener { _, isChecked ->
+            dialogAdsConsentBinding.adsConsentPersonalised.isEnabled = isChecked
+        }
+
+        dialogAdsConsentBinding.adsConsentPersonalised.setOnClickListener {
+            presenter.onPrivacyAgree(true)
+            dialog.dismiss()
+        }
+
+        dialogAdsConsentBinding.adsConsentNonPersonalised.setOnClickListener {
+            presenter.onPrivacyAgree(false)
+            dialog.dismiss()
+        }
+
+        dialogAdsConsentBinding.adsConsentPrivacy.setOnClickListener { presenter.onPrivacySelected() }
+        dialogAdsConsentBinding.adsConsentCancel.setOnClickListener { dialog.cancel() }
+    }
+
+    override fun openPrivacyPolicy() {
+        openInternetBrowser(
+            "https://wulkanowy.github.io/polityka-prywatnosci.html",
+            ::showMessage
+        )
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

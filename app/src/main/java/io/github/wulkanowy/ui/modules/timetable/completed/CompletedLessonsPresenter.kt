@@ -1,7 +1,7 @@
 package io.github.wulkanowy.ui.modules.timetable.completed
 
 import android.annotation.SuppressLint
-import io.github.wulkanowy.data.Status
+import io.github.wulkanowy.data.*
 import io.github.wulkanowy.data.db.entities.CompletedLesson
 import io.github.wulkanowy.data.repositories.CompletedLessonsRepository
 import io.github.wulkanowy.data.repositories.PreferencesRepository
@@ -10,6 +10,7 @@ import io.github.wulkanowy.data.repositories.StudentRepository
 import io.github.wulkanowy.ui.base.BasePresenter
 import io.github.wulkanowy.utils.*
 import kotlinx.coroutines.flow.catch
+import io.github.wulkanowy.utils.*
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
@@ -49,6 +50,7 @@ class CompletedLessonsPresenter @Inject constructor(
         else reloadView(dateToReload)
         loadData()
         if (preferencesRepository.previewText.isNotBlank()) setLastSemesterDay()
+        else if (currentDate.isHolidays) setBaseDateOnHolidays()
     }
 
     fun onPreviousDay() {
@@ -92,6 +94,19 @@ class CompletedLessonsPresenter @Inject constructor(
         view?.showCompletedLessonDialog(completedLesson)
     }
 
+    private fun setBaseDateOnHolidays() {
+        flow {
+            val student = studentRepository.getCurrentStudent()
+            emit(semesterRepository.getCurrentSemester(student))
+        }.catch {
+            Timber.i("Loading semester result: An exception occurred")
+        }.onEach {
+            baseDate = baseDate.getLastSchoolDayIfHoliday(it.schoolYear)
+            currentDate = baseDate
+            reloadNavigation()
+        }.launch("holidays")
+    }
+
     private fun setLastSemesterDay() {
         flow {
             val student = studentRepository.getCurrentStudent()
@@ -105,57 +120,46 @@ class CompletedLessonsPresenter @Inject constructor(
     }
 
     private fun loadData(forceRefresh: Boolean = false) {
-        Timber.i("Loading completed lessons data started")
-
-        flowWithResourceIn {
+        flatResourceFlow {
             val student = studentRepository.getCurrentStudent()
             val semester = semesterRepository.getCurrentSemester(student)
             completedLessonsRepository.getCompletedLessons(
-                student,
-                semester,
-                currentDate,
-                currentDate,
-                forceRefresh
+                student = student,
+                semester = semester,
+                start = currentDate,
+                end = currentDate,
+                forceRefresh = forceRefresh
             )
-        }.onEach {
-            when (it.status) {
-                Status.LOADING -> {
-                    if (!it.data.isNullOrEmpty()) {
-                        view?.run {
-                            enableSwipe(true)
-                            showRefresh(true)
-                            showProgress(false)
-                            showContent(true)
-                            updateData(it.data.sortedBy { item -> item.number })
-                        }
-                    }
-                }
-                Status.SUCCESS -> {
-                    Timber.i("Loading completed lessons lessons result: Success")
-                    view?.apply {
-                        updateData(it.data!!.sortedBy { item -> item.number })
-                        showEmpty(it.data.isEmpty())
-                        showErrorView(false)
-                        showContent(it.data.isNotEmpty())
-                    }
-                    analytics.logEvent(
-                        "load_data",
-                        "type" to "completed_lessons",
-                        "items" to it.data!!.size
-                    )
-                }
-                Status.ERROR -> {
-                    Timber.i("Loading completed lessons result: An exception occurred")
-                    completedLessonsErrorHandler.dispatch(it.error!!)
+        }
+            .logResourceStatus("load completed lessons")
+            .mapResourceData { it.sortedBy { lesson -> lesson.number } }
+            .onResourceData {
+                view?.run {
+                    enableSwipe(true)
+                    showProgress(false)
+                    showErrorView(false)
+                    showContent(it.isNotEmpty())
+                    showEmpty(it.isEmpty())
+                    updateData(it)
                 }
             }
-        }.afterLoading {
-            view?.run {
-                showRefresh(false)
-                showProgress(false)
-                enableSwipe(true)
+            .onResourceIntermediate { view?.showRefresh(true) }
+            .onResourceSuccess {
+                analytics.logEvent(
+                    "load_data",
+                    "type" to "completed_lessons",
+                    "items" to it.size
+                )
             }
-        }.launch()
+            .onResourceNotLoading {
+                view?.run {
+                    enableSwipe(true)
+                    showProgress(false)
+                    showRefresh(false)
+                }
+            }
+            .onResourceError(errorHandler::dispatch)
+            .launch()
     }
 
     private fun showErrorViewOnError(message: String, error: Throwable) {

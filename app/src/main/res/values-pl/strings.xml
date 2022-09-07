@@ -55,7 +55,7 @@
     <string name="login_invalid_symbol">Nieprawidłowy symbol</string>
     <string name="login_incorrect_symbol">Nie znaleziono ucznia. Sprawdź poprawność symbolu i wybranej odmiany dziennika UONET+</string>
     <string name="login_duplicate_student">Wybrany uczeń jest już zalogowany</string>
-    <string name="login_symbol_helper">Symbol znajdziesz na stronie dziennika w&#160;<b>Uczeń</b> →&#160;<b>Dostęp Mobilny</b> →&#160;<b>Zarejestruj urządzenie mobilne</b>.\n\nUpewnij się, że w polu <b>Dziennik UONET+</b> na poprzednim ekranie została ustawiona odpowiednia odmiana dziennika.\n\n<b>Wulkanowy na chwilę obecną nie wykrywa uczniów przedszkolnych (z zerówki)</b></string>
+    <string name="login_symbol_helper">Symbol znajdziesz na stronie dziennika w&#160;<b>Uczeń</b> →&#160;<b>Dostęp Mobilny</b> →&#160;<b>Zarejestruj urządzenie mobilne</b>.\n\nUpewnij się, że w polu <b>Dziennik UONET+</b> na poprzednim ekranie została ustawiona odpowiednia odmiana dziennika</string>
     <string name="login_select_student">Wybierz uczniów do zalogowania w aplikacji</string>
     <string name="login_advanced">Inne opcje</string>
     <string name="login_advanced_warning_mobile_api">W tym trybie nie działa szczęśliwy numerek, uczeń na tle klasy, podsumowanie frekwencji, usprawiedliwianie nieobecności, lekcje zrealizowane, informacje o szkole i podgląd listy zarejestrowanych urządzeń</string>
@@ -71,11 +71,15 @@
     <string name="login_recover_title">Przywróć swoje konto</string>
     <string name="login_recover">Przywróć</string>
     <string name="login_signed_in">Uczeń jest już zalogowany</string>
+    <string name="login_host_standard">Standardowa</string>
     <!--Main-->
     <string name="main_account_picker">Menadżer kont</string>
     <string name="main_log_in">Zaloguj się</string>
     <string name="main_session_expired">Sesja wygasła</string>
     <string name="main_session_relogin">Sesja wygasła, zaloguj się ponownie</string>
+    <string name="main_support_title">Wparcie aplikacji</string>
+    <string name="main_support_description">Podoba Ci się ta aplikacja? Wspieraj jej rozwój poprzez włączenie nieinwazyjnych reklam, które możesz wyłączyć w dowolnym momencie</string>
+    <string name="main_support_positive">Włącz reklamy</string>
     <!--Grade-->
     <string name="grade_header">Ocena</string>
     <string name="grade_semester">Semestr %d</string>
@@ -93,7 +97,7 @@
     <string name="grade_summary_predicted_grade">Przewidywana ocena</string>
     <string name="grade_summary_calculated_average">Obliczona średnia</string>
     <string name="grade_summary_calculated_average_help_dialog_title">Jak działa obliczona średnia?</string>
-    <string name="grade_summary_calculated_average_help_dialog_message">Obliczona średnia jest średnią arytmetyczną obliczoną ze średnich przedmiotów. Pozwala ona na poznanie przybliżonej średniej końcowej. Jest obliczana w sposób wybrany przez użytkownika w ustawieniach aplikacji. Zaleca się wybranie odpowiedniej opcji. Dzieje się tak dlatego, że obliczanie średnich w szkołach różni się. Dodatkowo, jeśli twoja szkoła ma włączone średnie przedmiotów na stronie dziennika Vulcan, aplikacja pobiera je i ich nie oblicza. Można to zmienić, wymuszając obliczanie średniej w ustawieniach aplikacji.\n\n<b>Średnia ocen tylko z wybranego semestru</b>:\n1. Obliczanie średniej arytmetycznej każdego przedmiotu w danym semestrze\n2. Zsumowanie obliczonych średnich\n3. Obliczanie średniej arytmetycznej zsumowanych średnich\n\n<b>Średnia ze średnich z obu semestrów</b>:\n1.Obliczanie średniej arytmetycznej każdego przedmiotu w semestrze 1 i 2\n2. Obliczanie średniej arytmetycznej obliczonych średnich w semetrze 1 i 2 każdego przedmiotu.\n3. Zsumowanie obliczonych średnich\n4. Obliczanie średniej arytmetycznej zsumowanych średnich\n\n<b>Średnia wszystkich ocen z całego roku:</b>\n1. Obliczanie średniej arytmetycznej z każdego przedmiotu w ciągu całego roku. Końcowa ocena w 1 semestrze jest bez znaczenia.\n3. Zsumowanie obliczonych średnich\n4. Obliczanie średniej arytmetycznej z zsumowanych średnich</string>
+    <string name="grade_summary_calculated_average_help_dialog_message">Obliczona średnia jest średnią arytmetyczną obliczoną ze średnich przedmiotów. Pozwala ona na poznanie przybliżonej średniej końcowej. Jest obliczana w sposób wybrany przez użytkownika w ustawieniach aplikacji. Zaleca się wybranie odpowiedniej opcji. Dzieje się tak dlatego, że obliczanie średnich w szkołach różni się. Dodatkowo, jeśli twoja szkoła ma włączone średnie przedmiotów na stronie dziennika Vulcan, aplikacja pobiera je i ich nie oblicza. Można to zmienić, wymuszając obliczanie średniej w ustawieniach aplikacji.\n\n<b>Średnia ocen tylko z wybranego semestru</b>:\n1. Obliczanie średniej arytmetycznej każdego przedmiotu w danym semestrze\n2. Zsumowanie obliczonych średnich\n3. Obliczanie średniej arytmetycznej zsumowanych średnich\n\n<b>Średnia ze średnich z obu semestrów</b>:\n1.Obliczanie średniej arytmetycznej każdego przedmiotu w semestrze 1 i 2\n2. Obliczanie średniej arytmetycznej obliczonych średnich w semestrze 1 i 2 każdego przedmiotu.\n3. Zsumowanie obliczonych średnich\n4. Obliczanie średniej arytmetycznej zsumowanych średnich\n\n<b>Średnia wszystkich ocen z całego roku:</b>\n1. Obliczanie średniej arytmetycznej z każdego przedmiotu w ciągu całego roku. Końcowa ocena w 1 semestrze jest bez znaczenia.\n2. Zsumowanie obliczonych średnich\n3. Obliczanie średniej arytmetycznej z zsumowanych średnich</string>
     <string name="grade_summary_final_average_help_dialog_title">Jak działa końcowa średnia?</string>
     <string name="grade_summary_final_average_help_dialog_message">Średnią końcową jest średnia arytmetyczna obliczona na podstawie wszystkich obecnie dostępnych ocen końcowych w danym semestrze.\n\nSchemat obliczeń składa się z następujących kroków:\n1. Sumowanie końcowych ocen wpisanych przez nauczycieli\n2. Dzielenie przez liczbę przedmiotów, z których oceny zostały już wystawione</string>
     <string name="grade_summary_final_average">Końcowa średnia</string>
@@ -105,7 +109,9 @@
     <string name="grade_statistics_semester">Semestralne</string>
     <string name="grade_statistics_points">Punkty</string>
     <string name="grade_statistics_legend">Legenda</string>
-    <string name="grade_statistics_average">Średnia: %1$s</string>
+    <string name="grade_statistics_class_average">Średnia klasy: %1$s</string>
+    <string name="grade_statistics_student_average">Twoja średnia: %1$s</string>
+    <string name="grade_statistics_student_grade">Twoja ocena: %1$s</string>
     <string name="grade_statistics_average_class">Klasa</string>
     <string name="grade_statistics_average_student">Uczeń</string>
     <plurals name="grade_number_item">
@@ -283,13 +289,18 @@
     <string name="message_no_items">Brak wiadomości</string>
     <string name="message_from">Od:</string>
     <string name="message_to">Do:</string>
-    <string name="message_date">Data: %s</string>
+    <string name="message_date">Data: %1$s</string>
     <string name="message_reply">Odpowiedz</string>
     <string name="message_forward">Prześlij dalej</string>
-    <string name="message_delete">Usuń</string>
-    <string name="message_move_to_bin">Przenieś do kosza</string>
+    <string name="message_select_all">Zaznacz wszystkie</string>
+    <string name="message_unselect_all">Odznacz wszystkie</string>
+    <string name="message_move_to_trash">Przenieś do kosza</string>
     <string name="message_delete_forever">Usuń trwale</string>
     <string name="message_delete_success">Wiadomość usunięta pomyślnie</string>
+    <string name="message_mailbox_type_student">uczeń</string>
+    <string name="message_mailbox_type_parent">rodzic</string>
+    <string name="message_mailbox_type_guardian">opiekun</string>
+    <string name="message_mailbox_type_employee">pracownik</string>
     <string name="message_share">Udostępnij</string>
     <string name="message_print">Drukuj</string>
     <string name="message_subject">Temat</string>
@@ -301,12 +312,11 @@
     <string name="message_chip_only_unread">Tylko nieprzeczytane</string>
     <string name="message_chip_only_with_attachments">Tylko z załącznikami</string>
     <string name="message_read">Przeczytana: %s</string>
-    <string name="message_read_by">Przeczytana przez: %1$d z %2$d osób</string>
     <plurals name="message_number_item">
-        <item quantity="one">%d wiadomość</item>
-        <item quantity="few">%d wiadomości</item>
-        <item quantity="many">%d wiadomości</item>
-        <item quantity="other">%d wiadomości</item>
+        <item quantity="one">%1$d wiadomość</item>
+        <item quantity="few">%1$d wiadomości</item>
+        <item quantity="many">%1$d wiadomości</item>
+        <item quantity="other">%1$d wiadomości</item>
     </plurals>
     <plurals name="message_new_items">
         <item quantity="one">Nowa wiadomość</item>
@@ -322,6 +332,13 @@
         <item quantity="many">Masz %1$d nowych wiadomości</item>
         <item quantity="other">Masz %1$d nowych wiadomości</item>
     </plurals>
+    <plurals name="message_selected_messages_count">
+        <item quantity="one">%1$d wybrana</item>
+        <item quantity="few">%1$d wybrane</item>
+        <item quantity="many">%1$d wybranych</item>
+        <item quantity="other">%1$d wybranych</item>
+    </plurals>
+    <string name="message_messages_deleted">Wiadomości zostały usunięte</string>
     <!--Note-->
     <string name="note_no_items">Brak informacji o uwagach</string>
     <string name="note_points">Punkty</string>
@@ -647,6 +664,7 @@
     <string name="all_copied">Skopiowano</string>
     <string name="all_undo">Cofnij</string>
     <string name="all_change">Zmień</string>
+    <string name="all_add_to_calendar">Dodaj do kalendarza</string>
     <!--Timetable Widget-->
     <string name="widget_timetable_no_items">Brak lekcji</string>
     <string name="widget_timetable_theme_title">Wybierz motyw</string>
@@ -689,7 +707,7 @@
     <string name="pref_notification_go_to_settings">Przejdź do ustawień</string>
     <string name="pref_services_header">Synchronizacja</string>
     <string name="pref_services_switch">Automatyczna aktualizacja</string>
-    <string name="pref_services_suspended">Zawieszona na wakacjach</string>
+    <string name="pref_services_suspended">Wstrzymana podczas wakacji</string>
     <string name="pref_services_interval">Interwał aktualizacji</string>
     <string name="pref_services_wifi">Tylko WiFi</string>
     <string name="pref_services_force_sync">Synchronizuj teraz</string>
@@ -702,6 +720,10 @@
     <string name="pref_other_fill_message_content">Odpowiadaj z historią wiadomości</string>
     <string name="pref_other_optional_arithmetic_average">Licz średnią arytmetyczną, gdy żadna ocena nie ma wagi</string>
     <string name="pref_ads_support_category_name">Wsparcie</string>
+    <string name="pref_ads_privacy_policy">Polityka prywatności</string>
+    <string name="pref_ads_agreements">Zgody</string>
+    <string name="pref_ads_consent">Zgoda na przetwarzanie danych związanych z reklamami</string>
+    <string name="pref_ads_show_in_app">Pokazuj reklamy w aplikacji</string>
     <string name="pref_ads_support">Obejrzyj pojedynczą reklamę, aby wesprzeć projekt</string>
     <string name="pref_ads_privacy_title">Zgoda na przetwarzanie danych</string>
     <string name="pref_ads_privacy_description">Aby obejrzeć reklamę, musisz zaakceptować warunki przetwarzania danych zawarte w naszej Polityce Prywatności</string>
@@ -709,6 +731,13 @@
     <string name="pref_ads_privacy_link">Polityka prywatności</string>
     <string name="pref_ads_loading">Ładowanie reklamy</string>
     <string name="pref_ads_once_per_visit">Dziękujemy za wsparcie, wróć później po więcej reklam</string>
+    <string name="pref_ads_consent_title">Czy możemy używać Twoich danych do wyświetlania reklam?</string>
+    <string name="pref_ads_consent_description">Możesz zmienić swój wybór w dowolnym momencie w ustawieniach aplikacji. Możemy wykorzystać Twoje dane do wyświetlania reklam dostosowanych do Ciebie lub, przy użyciu mniejszej ilości danych, wyświetlić niepersonalizowane reklamy. Zobacz naszą Politykę Prywatności, aby uzyskać więcej informacji</string>
+    <string name="pref_ads_summary_personalized">Spersonalizowane reklamy</string>
+    <string name="pref_ads_summary_non_personalized">Niespersonalizowane reklamy</string>
+    <string name="pref_ads_over_18_years_old">Mam ukończone 18 lat</string>
+    <string name="pref_ads_option_personalized">Tak, spersonalizowane reklamy</string>
+    <string name="pref_ads_option_non_personalized">Tak, niespersonalizowane reklamy</string>
     <string name="pref_settings_advanced_title">Zaawansowane</string>
     <string name="pref_settings_appearance_title">Wygląd i zachowanie</string>
     <string name="pref_settings_notifications_title">Powiadomienia</string>
@@ -760,6 +789,7 @@
     <string name="update_failed">Aktualizacja nie powiodła się! Wulkanowy może nie działać prawidłowo. Rozważ aktualizację</string>
     <!--Errors-->
     <string name="error_no_internet">Brak połączenia z internetem</string>
+    <string name="error_invalid_device_datetime">Wystąpił błąd. Sprawdź poprawność daty w urządzeniu</string>
     <string name="error_timeout">Nie udało się połączyć z dziennikiem. Serwery mogą być przeciążone. Spróbuj ponownie później</string>
     <string name="error_login_failed">Ładowanie danych nie powiodło się. Spróbuj ponownie później</string>
     <string name="error_password_change_required">Wymagana zmiana hasła do dziennika</string>
