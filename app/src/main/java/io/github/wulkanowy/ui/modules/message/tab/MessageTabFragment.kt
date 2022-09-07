@@ -15,6 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.github.wulkanowy.R
 import io.github.wulkanowy.data.db.entities.Message
 import io.github.wulkanowy.data.enums.MessageFolder
+import io.github.wulkanowy.data.repositories.PreferencesRepository
 import io.github.wulkanowy.databinding.FragmentMessageTabBinding
 import io.github.wulkanowy.ui.base.BaseFragment
 import io.github.wulkanowy.ui.modules.main.MainActivity
@@ -36,6 +37,9 @@ class MessageTabFragment : BaseFragment<FragmentMessageTabBinding>(R.layout.frag
     @Inject
     lateinit var messageTabAdapter: MessageTabAdapter
 
+    @Inject
+    lateinit var preferencesRepository: PreferencesRepository
+
     companion object {
 
         const val MESSAGE_TAB_FOLDER_ID = "message_tab_folder_id"
@@ -51,6 +55,10 @@ class MessageTabFragment : BaseFragment<FragmentMessageTabBinding>(R.layout.frag
 
     override val isViewEmpty
         get() = messageTabAdapter.itemCount == 0
+
+    override var isIncognito: Boolean
+        get() = preferencesRepository.isIncognitoMode
+        set(value) {preferencesRepository.isIncognitoMode = value}
 
     private var actionMode: ActionMode? = null
 
@@ -128,6 +136,16 @@ class MessageTabFragment : BaseFragment<FragmentMessageTabBinding>(R.layout.frag
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.action_menu_message_tab, menu)
+
+        val incognitoButton = menu.findItem(R.id.action_incognito)
+        if (isIncognito) incognitoButton.setIcon(R.drawable.ic_messages_incognito_on)
+        else incognitoButton.setIcon(R.drawable.ic_messages_incognito_off)
+        incognitoButton.setOnMenuItemClickListener {
+            isIncognito = !isIncognito
+            if (isIncognito) it.setIcon(R.drawable.ic_messages_incognito_on)
+            else it.setIcon(R.drawable.ic_messages_incognito_off)
+            true
+        }
 
         val searchView = menu.findItem(R.id.action_search).actionView as SearchView
         searchView.queryHint = getString(R.string.all_search_hint)

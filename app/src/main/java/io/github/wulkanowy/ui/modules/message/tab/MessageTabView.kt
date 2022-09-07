@@ -7,6 +7,8 @@ interface MessageTabView : BaseView {
 
     val isViewEmpty: Boolean
 
+    var isIncognito: Boolean
+
     fun initView()
 
     fun resetListPosition()
