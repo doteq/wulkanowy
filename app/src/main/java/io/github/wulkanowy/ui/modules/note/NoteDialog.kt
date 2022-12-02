@@ -34,7 +34,7 @@ class NoteDialog : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NO_TITLE, R.style.Wulkanowy_Dialog_Theme)
+        setStyle(STYLE_NO_TITLE, 0)
         note = requireArguments().serializable(ARGUMENT_KEY)
     }
 

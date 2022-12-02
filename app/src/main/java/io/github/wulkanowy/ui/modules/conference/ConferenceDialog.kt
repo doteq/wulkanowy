@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
-import io.github.wulkanowy.R
 import io.github.wulkanowy.data.db.entities.Conference
 import io.github.wulkanowy.databinding.DialogConferenceBinding
 import io.github.wulkanowy.utils.lifecycleAwareVariable
@@ -31,7 +30,7 @@ class ConferenceDialog : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NO_TITLE, R.style.Wulkanowy_Dialog_Theme)
+        setStyle(STYLE_NO_TITLE, 0)
         conference = requireArguments().serializable(ARGUMENT_KEY)
     }
 

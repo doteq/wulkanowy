@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
-import io.github.wulkanowy.R
 import io.github.wulkanowy.data.db.entities.CompletedLesson
 import io.github.wulkanowy.databinding.DialogLessonCompletedBinding
 import io.github.wulkanowy.utils.lifecycleAwareVariable
@@ -29,7 +28,7 @@ class CompletedLessonDialog : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NO_TITLE, R.style.Wulkanowy_Dialog_Theme)
+        setStyle(STYLE_NO_TITLE, 0)
         completedLesson = requireArguments().serializable(ARGUMENT_KEY)
     }
 
