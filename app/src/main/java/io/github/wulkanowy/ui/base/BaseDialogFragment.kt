@@ -1,8 +1,12 @@
 package io.github.wulkanowy.ui.base
 
+import android.content.res.ColorStateList
+import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.viewbinding.ViewBinding
+import com.google.android.material.elevation.SurfaceColors
 import io.github.wulkanowy.utils.AnalyticsHelper
 import io.github.wulkanowy.utils.lifecycleAwareVariable
 import javax.inject.Inject
@@ -46,5 +50,10 @@ abstract class BaseDialogFragment<VB : ViewBinding> : DialogFragment(), BaseView
     override fun onPause() {
         super.onPause()
         analyticsHelper.popCurrentScreen(this::class.simpleName)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        view.setBackgroundColor(SurfaceColors.SURFACE_3.getColor(requireContext()))
     }
 }
