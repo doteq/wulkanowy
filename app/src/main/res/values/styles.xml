@@ -51,7 +51,7 @@
     </style>
 
     <style name="Widget.Wulkanowy.CardView" parent="Widget.Material3.CardView.Filled">
-        <item name="cardBackgroundColor">@color/colorCards</item>
+        <item name="cardBackgroundColor">@color/surface_1</item>
     </style>
 
     <style name="WulkanowyTheme.TextAppearanceBottomNavigation">

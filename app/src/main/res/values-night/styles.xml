@@ -67,8 +67,4 @@
         <item name="windowNoTitle">true</item>
         <item name="android:textColor">?android:textColorPrimary</item>
     </style>
-
-    <style name="Widget.Wulkanowy.CardView" parent="Widget.Material3.CardView.Filled">
-        <item name="cardBackgroundColor">@color/colorCardsDark</item>
-    </style>
 </resources>
